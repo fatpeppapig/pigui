@@ -1,6 +1,6 @@
 {
     "name": "pigui",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "PigUI — Svelte 5 components themed entirely by Tailwind CSS V4 semantic tokens",
     "license": "0BSD",
     "type": "module",
