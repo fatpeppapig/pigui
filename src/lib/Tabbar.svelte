@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { pressClasses } from "./constants/animations";
+
     type Item = {
         value: string | number;
         label: string;
@@ -71,6 +73,7 @@
             disabled={item.disabled}
             class={[
                 "-mb-px cursor-pointer rounded-t-md border-b-2 px-3 py-1.5",
+                pressClasses,
                 value === item.value
                     ? "border-accent font-bold"
                     : "border-transparent hover:bg-muted",

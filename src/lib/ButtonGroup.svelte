@@ -12,7 +12,7 @@
 <div
     role="group"
     aria-label={label}
-    class="inline-flex [&>button]:rounded-none [&>button:not(:first-child)]:border-l-0 [&>button:first-child]:rounded-l-lg [&>button:last-child]:rounded-r-lg"
+    class="inline-flex [&>button]:rounded-none [&>button:not(:first-child)]:-ml-px [&>button:first-child]:rounded-l-lg [&>button:last-child]:rounded-r-lg"
 >
     {@render children()}
 </div>

@@ -3,6 +3,8 @@
 
     import type { Placement } from "./utils/floating";
 
+    import { colorTransition } from "./constants/animations";
+
     import Floating from "./Floating.svelte";
 
     type Item = {
@@ -100,6 +102,7 @@
                     disabled={item.disabled}
                     class={[
                         "w-full px-3 py-1.5 text-left cursor-pointer truncate",
+                        colorTransition,
                         index === highlighted && "bg-muted",
                         item.disabled && "opacity-50",
                     ]}

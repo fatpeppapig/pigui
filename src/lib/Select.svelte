@@ -1,6 +1,8 @@
 <script lang="ts">
     import IconChevronDown from "@tabler/icons-svelte/icons/chevron-down";
 
+    import { colorTransition, pressClasses } from "./constants/animations";
+
     import Floating from "./Floating.svelte";
 
     type Option = {
@@ -89,7 +91,10 @@
 
 <button
     bind:this={anchor}
-    class="flex items-center gap-1 bg-surface rounded-lg px-2 py-1 border border-border cursor-pointer"
+    class={[
+        "flex items-center gap-1 bg-surface rounded-lg px-2 py-1 border border-border cursor-pointer",
+        pressClasses,
+    ]}
     aria-haspopup="listbox"
     aria-expanded={open}
     onclick={() => (open ? close() : show())}
@@ -119,6 +124,7 @@
                 <button
                     class={[
                         "w-full px-2 py-1 text-left cursor-pointer",
+                        colorTransition,
                         index === highlighted && "bg-muted",
                     ]}
                     onpointerenter={() => (highlighted = index)}

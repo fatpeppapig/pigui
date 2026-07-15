@@ -48,6 +48,6 @@ export const statusClasses: Record<Status, string> = {
 };
 
 export const activeClasses =
-    "border border-accent bg-accent-soft text-foreground";
+    "relative z-10 border border-accent bg-accent-soft text-foreground";
 export const disabledClasses = "opacity-50 pointer-events-none";
 export const shadowClasses = "shadow-md";

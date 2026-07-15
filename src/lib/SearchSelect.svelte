@@ -1,4 +1,6 @@
 <script lang="ts" generics="V">
+    import { colorTransition } from "./constants/animations";
+
     import Floating from "./Floating.svelte";
 
     type Option = {
@@ -122,6 +124,7 @@
                 <button
                     class={[
                         "w-full px-2 py-1 text-left cursor-pointer",
+                        colorTransition,
                         index === active && "bg-muted",
                     ]}
                     onpointerenter={() => (highlighted = index)}

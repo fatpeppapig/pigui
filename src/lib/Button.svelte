@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Component, SvelteComponent } from "svelte";
 
+    import { pressClasses } from "./constants/animations";
     import {
         DEFAULT_VARIANT,
         activeClasses,
@@ -49,6 +50,7 @@
 <button
     class={[
         "cursor-pointer flex items-center justify-center",
+        pressClasses,
         size
             ? [
                   sizeClasses[size],

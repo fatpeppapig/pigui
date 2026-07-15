@@ -1,6 +1,7 @@
 <script lang="ts">
     import IconClock from "@tabler/icons-svelte/icons/clock";
 
+    import { colorTransition, pressClasses } from "./constants/animations";
     import { config } from "./constants/config.svelte";
     import { formatTimeAs, nowTime, pad, parseTimeAs } from "./utils/datetime";
 
@@ -115,7 +116,7 @@
 
     <button
         type="button"
-        class="cursor-pointer"
+        class={["cursor-pointer", pressClasses]}
         aria-label={`${label} picker`}
         onclick={toggle}
     >
@@ -135,6 +136,8 @@
                         data-selected={parts[0] === hour}
                         class={[
                             "w-12 cursor-pointer rounded-md border px-2 py-1 text-center",
+                            pressClasses,
+                            colorTransition,
                             parts[0] === hour
                                 ? "border-accent bg-accent-soft"
                                 : "border-transparent hover:bg-muted",
@@ -158,6 +161,8 @@
                         data-selected={parts[1] === minute}
                         class={[
                             "w-12 cursor-pointer rounded-md border px-2 py-1 text-center",
+                            pressClasses,
+                            colorTransition,
                             parts[1] === minute
                                 ? "border-accent bg-accent-soft"
                                 : "border-transparent hover:bg-muted",

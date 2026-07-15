@@ -3,6 +3,7 @@
     import IconChevronLeft from "@tabler/icons-svelte/icons/chevron-left";
     import IconChevronRight from "@tabler/icons-svelte/icons/chevron-right";
 
+    import { colorTransition, pressClasses } from "./constants/animations";
     import { config } from "./constants/config.svelte";
     import {
         formatDate,
@@ -125,7 +126,7 @@
 
     <button
         type="button"
-        class="cursor-pointer"
+        class={["cursor-pointer", pressClasses]}
         aria-label={`${label} calendar`}
         onclick={toggle}
     >
@@ -140,7 +141,7 @@
         <div class="flex items-center justify-between">
             <button
                 type="button"
-                class="cursor-pointer p-1"
+                class={["cursor-pointer p-1", pressClasses]}
                 aria-label={previousMonthLabel}
                 onclick={() => shiftMonth(-1)}
             >
@@ -154,7 +155,7 @@
 
             <button
                 type="button"
-                class="cursor-pointer p-1"
+                class={["cursor-pointer p-1", pressClasses]}
                 aria-label={nextMonthLabel}
                 onclick={() => shiftMonth(1)}
             >
@@ -175,6 +176,8 @@
                         type="button"
                         class={[
                             "h-8 cursor-pointer rounded-md border",
+                            pressClasses,
+                            colorTransition,
                             value === dateOf(day)
                                 ? "border-accent bg-accent-soft"
                                 : [
