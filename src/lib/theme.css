@@ -1,0 +1,54 @@
+@theme {
+    --color-background: light-dark(var(--color-gray-50), var(--color-gray-950));
+    --color-foreground: light-dark(var(--color-gray-950), var(--color-white));
+    --color-surface: light-dark(var(--color-white), var(--color-gray-900));
+    --color-surface-alt: light-dark(var(--color-white), var(--color-gray-900));
+    --color-surface-raised: light-dark(
+        var(--color-white),
+        var(--color-gray-800)
+    );
+    --color-surface-brand: light-dark(
+        var(--color-gray-100),
+        var(--color-gray-800)
+    );
+    --color-muted: light-dark(var(--color-gray-100), var(--color-gray-700));
+    --color-muted-foreground: light-dark(
+        var(--color-gray-500),
+        var(--color-gray-400)
+    );
+    --color-border: light-dark(var(--color-gray-200), var(--color-gray-700));
+    --color-primary: light-dark(var(--color-gray-900), var(--color-white));
+    --color-primary-foreground: light-dark(
+        var(--color-white),
+        var(--color-gray-900)
+    );
+    --color-secondary: light-dark(var(--color-gray-100), var(--color-gray-800));
+    --color-secondary-foreground: light-dark(
+        var(--color-gray-900),
+        var(--color-white)
+    );
+    --color-accent: light-dark(var(--color-gray-400), var(--color-gray-500));
+    --color-accent-soft: light-dark(
+        var(--color-gray-100),
+        var(--color-gray-800)
+    );
+    --color-accent-foreground: light-dark(
+        var(--color-gray-600),
+        var(--color-gray-300)
+    );
+    --color-danger: light-dark(var(--color-red-600), var(--color-red-500));
+    --color-danger-foreground: var(--color-white);
+    --color-success: light-dark(var(--color-green-600), var(--color-green-500));
+    --color-success-foreground: var(--color-white);
+    --color-warning: light-dark(var(--color-amber-500), var(--color-amber-400));
+    --color-warning-foreground: var(--color-gray-950);
+    --color-info: light-dark(var(--color-sky-600), var(--color-sky-500));
+    --color-info-foreground: var(--color-white);
+    --color-scrim: rgb(0 0 0 / 0.5);
+}
+
+@layer base {
+    :root {
+        color-scheme: light dark;
+    }
+}
