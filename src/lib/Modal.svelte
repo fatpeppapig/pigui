@@ -48,7 +48,7 @@
         />
     </div>
 
-    <div class="min-h-0 overflow-auto">
+    <div class="pigui-modal-scroll min-h-0 overflow-auto">
         {@render children()}
     </div>
 </dialog>

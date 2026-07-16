@@ -387,7 +387,7 @@
             </div>
         {/if}
 
-        <div class="flex items-center justify-end gap-2 md:w-1/3">
+        <div class="flex items-center justify-end grow gap-2 md:w-1/3">
             <Select bind:value={pageSize} options={PAGE_SIZES} />
 
             <div class="flex text-nowrap">{effectiveLabels.perPage}</div>

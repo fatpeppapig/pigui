@@ -38,6 +38,28 @@
     }
 }
 
+.pigui-modal-scroll {
+    background:
+        linear-gradient(var(--color-surface-raised) 30%, transparent) top / 100%
+            1.5rem,
+        linear-gradient(transparent, var(--color-surface-raised) 70%) bottom /
+            100% 1.5rem,
+        radial-gradient(
+                farthest-side at 50% 0,
+                rgba(0, 0, 0, 0.15),
+                transparent
+            )
+            top / 100% 0.75rem,
+        radial-gradient(
+                farthest-side at 50% 100%,
+                rgba(0, 0, 0, 0.15),
+                transparent
+            )
+            bottom / 100% 0.75rem;
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .pigui-modal,
     .pigui-modal::backdrop {
