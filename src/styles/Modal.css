@@ -1,4 +1,5 @@
 .pigui-modal {
+    display: none;
     opacity: 0;
     transform: scale(0.95) translateY(10px);
     transition:
@@ -9,6 +10,7 @@
 }
 
 .pigui-modal[open] {
+    display: flex;
     opacity: 1;
     transform: none;
 }
