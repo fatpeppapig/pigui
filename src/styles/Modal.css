@@ -1,0 +1,45 @@
+.pigui-modal {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+    transition:
+        opacity 200ms ease,
+        transform 200ms ease,
+        overlay 200ms ease allow-discrete,
+        display 200ms ease allow-discrete;
+}
+
+.pigui-modal[open] {
+    opacity: 1;
+    transform: none;
+}
+
+.pigui-modal::backdrop {
+    opacity: 0;
+    transition:
+        opacity 200ms ease,
+        overlay 200ms ease allow-discrete,
+        display 200ms ease allow-discrete;
+}
+
+.pigui-modal[open]::backdrop {
+    opacity: 1;
+}
+
+@starting-style {
+    .pigui-modal[open] {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    .pigui-modal[open]::backdrop {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pigui-modal,
+    .pigui-modal::backdrop {
+        transition: none;
+        transform: none;
+    }
+}

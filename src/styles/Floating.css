@@ -1,0 +1,38 @@
+.pigui-floating {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+    transform-origin: top center;
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease,
+        overlay 150ms ease allow-discrete,
+        display 150ms ease allow-discrete;
+}
+
+.pigui-floating[data-side="top"] {
+    transform: scale(0.96) translateY(4px);
+    transform-origin: bottom center;
+}
+
+.pigui-floating:popover-open {
+    opacity: 1;
+    transform: none;
+}
+
+@starting-style {
+    .pigui-floating:popover-open {
+        opacity: 0;
+        transform: scale(0.96) translateY(-4px);
+    }
+
+    .pigui-floating[data-side="top"]:popover-open {
+        transform: scale(0.96) translateY(4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pigui-floating {
+        transition: none;
+        transform: none;
+    }
+}

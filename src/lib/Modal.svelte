@@ -5,6 +5,8 @@
 
     import Button from "./Button.svelte";
 
+    import "../styles/Modal.css";
+
     type Props = {
         open: boolean;
         onClose?: () => void;
@@ -33,11 +35,11 @@
 
 <dialog
     bind:this={dialog}
-    class="relative m-auto overflow-visible rounded-lg border border-border bg-surface-raised text-foreground backdrop:bg-scrim"
+    class="pigui-modal relative m-auto flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg border border-border bg-surface-raised text-foreground backdrop:bg-scrim"
     onclose={onClose}
     onclick={backdropClick}
 >
-    <div class="w-8 h-8 absolute right-4 top-4">
+    <div class="w-8 h-8 absolute right-4 top-4 z-10">
         <Button
             icon={IconX}
             round
@@ -46,5 +48,7 @@
         />
     </div>
 
-    {@render children()}
+    <div class="min-h-0 overflow-auto">
+        {@render children()}
+    </div>
 </dialog>

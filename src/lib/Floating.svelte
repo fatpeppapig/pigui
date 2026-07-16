@@ -1,7 +1,9 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
 
-    import { computePosition, type Placement } from "./utils/floating";
+    import { computePosition, type Placement, type Side } from "./utils/floating";
+
+    import "../styles/Floating.css";
 
     type Props = {
         anchor?: HTMLElement;
@@ -28,6 +30,7 @@
     }: Props = $props();
 
     let el: HTMLDivElement | undefined = $state();
+    let side: Side | undefined = $state();
 
     const position = () => {
         if (!anchor || !el) return;
@@ -46,6 +49,7 @@
 
         el.style.top = `${placed.top}px`;
         el.style.left = `${placed.left}px`;
+        side = placed.side;
     };
 
     $effect(() => {
@@ -83,8 +87,9 @@
     bind:this={el}
     popover={dismissible ? "auto" : "manual"}
     {role}
+    data-side={side}
     ontoggle={toggle}
-    class="fixed m-0 border-0 bg-transparent p-0 overflow-visible"
+    class="pigui-floating fixed m-0 border-0 bg-transparent p-0 overflow-visible"
 >
     {@render children()}
 </div>
