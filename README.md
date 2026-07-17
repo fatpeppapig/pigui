@@ -90,6 +90,20 @@ npm run storybook    # browse components at localhost:6006
 npm run format       # prettier
 ```
 
+## Showcase
+
+The [pigui.falba.me](https://pigui.falba.me) site lives in
+[`src/showcase`](src/showcase) as part of this same package — a SvelteKit app
+prerendered to static HTML and deployed to GitHub Pages on every push to
+`master` (see [`.github/workflows/deploy-showcase.yml`](.github/workflows/deploy-showcase.yml)).
+
+```sh
+npm run showcase:dev      # local dev server
+npm run showcase:build    # prerender to ./build
+npm run showcase:preview  # serve the production build
+npm run showcase:check    # svelte-check
+```
+
 ## License
 
 [0BSD](LICENSE) — do whatever you want, no attribution required.

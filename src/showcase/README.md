@@ -32,12 +32,3 @@ trigger `.github/workflows/deploy-showcase.yml`, which runs
 The build is served from the root of a custom domain, so the SvelteKit
 `base` path is empty and `static/CNAME` pins the domain to `pigui.falba.me`.
 
-### One-time setup
-
-1. **Repo → Settings → Pages → Build and deployment → Source:**
-   **GitHub Actions**.
-2. **DNS (Route 53):** a `CNAME` record for `pigui.falba.me` →
-   `fatpeppapig.github.io`. (An `ALIAS`/`A` record works for an apex
-   domain, but this is a subdomain, so `CNAME` is correct.)
-3. Back in **Settings → Pages**, set the custom domain to
-   `pigui.falba.me` and enable **Enforce HTTPS** once the cert is issued.
