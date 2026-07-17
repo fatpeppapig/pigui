@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="PigUI — Svelte 5 components themed entirely by Tailwind CSS v4 semantic tokens."
+        />
+        <script>
+            try {
+                const scheme = localStorage.getItem("pigui-scheme");
+                if (scheme) document.documentElement.style.colorScheme = scheme;
+            } catch (error) {
+                void error;
+            }
+        </script>
+        %sveltekit.head%
+    </head>
+    <body>
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>

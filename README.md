@@ -4,6 +4,9 @@ Svelte 5 component library themed entirely by Tailwind CSS V4 semantic tokens.
 The only runtime dependency is `@tabler/icons-svelte`. It currently ships as
 source only. You need Vite + Svelte 5 + Tailwind V4 setup.
 
+Live showcase: **[pigui.falba.me](https://pigui.falba.me)** (source in
+[`src/showcase`](src/showcase)).
+
 ## Install
 
 Not on npm yet. Link locally:

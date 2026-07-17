@@ -3,3 +3,5 @@ dist/
 .DS_Store
 storybook-static/
 *storybook.log
+.svelte-kit/
+build/
