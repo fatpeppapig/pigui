@@ -13,6 +13,7 @@
         placeholder?: string;
         value?: V | null;
         onEnter?: () => void;
+        oninput?: (query: string) => void;
     };
 
     let {
@@ -20,6 +21,7 @@
         placeholder,
         value = $bindable(null),
         onEnter,
+        oninput,
     }: Props = $props();
 
     let query = $state("");
@@ -91,6 +93,7 @@
         value = null;
         highlighted = 0;
         open = true;
+        oninput?.(text);
     };
 </script>
 

@@ -112,7 +112,6 @@
 
     let activeId = $state("button");
 
-
     let modalOpen = $state(false);
     let dialogOpen = $state(false);
 
@@ -162,7 +161,10 @@
         { label: "Rename", onSelect: () => showToast("Renamed") },
         { label: "Duplicate", onSelect: () => showToast("Duplicated") },
         { label: "Archive", disabled: true },
-        { label: "Delete", onSelect: () => showToast("Deleted", { status: "danger" }) },
+        {
+            label: "Delete",
+            onSelect: () => showToast("Deleted", { status: "danger" }),
+        },
     ];
 
     const breadcrumbItems = [
@@ -201,7 +203,13 @@
     const columns: Column<Person>[] = [
         { key: "name", label: "Name", editable: true },
         { key: "role", label: "Role", editable: true },
-        { key: "age", label: "Age", type: "number", width: "6rem", editable: true },
+        {
+            key: "age",
+            label: "Age",
+            type: "number",
+            width: "6rem",
+            editable: true,
+        },
     ];
 
     let rows = $state<Person[]>([
@@ -353,7 +361,11 @@
                 </Demo>
 
                 <Demo label="Icons & states">
-                    <Button variant="secondary" icon={IconClock} label="With icon" />
+                    <Button
+                        variant="secondary"
+                        icon={IconClock}
+                        label="With icon"
+                    />
 
                     <Button
                         variant="secondary"
@@ -419,9 +431,16 @@
                 description="Text, number (with decimals and separators), and password fields."
             >
                 <Demo inner="flex flex-col gap-3 w-64">
-                    <Input placeholder="Type something…" bind:value={inputText} />
+                    <Input
+                        placeholder="Type something…"
+                        bind:value={inputText}
+                    />
 
-                    <Input type="number" decimals={2} bind:value={inputNumber} />
+                    <Input
+                        type="number"
+                        decimals={2}
+                        bind:value={inputNumber}
+                    />
 
                     <Input
                         type="password"
@@ -550,7 +569,11 @@
                 description="A segmented tab control. Bound value: {tab}."
             >
                 <Demo>
-                    <Tabbar items={tabItems} bind:value={tab} label="Sections" />
+                    <Tabbar
+                        items={tabItems}
+                        bind:value={tab}
+                        label="Sections"
+                    />
                 </Demo>
             </Section>
 
@@ -836,7 +859,9 @@
                         onEdit={(row, key, value) =>
                             Object.assign(row, { [key]: value })}
                         onDelete={(row) =>
-                            (rows = rows.filter((other) => other.id !== row.id))}
+                            (rows = rows.filter(
+                                (other) => other.id !== row.id,
+                            ))}
                     />
                 </Demo>
             </Section>
