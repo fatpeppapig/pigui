@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
 
+    import { config } from "./constants/config.svelte";
+
     import type { Placement } from "./utils/floating";
 
     import Floating from "./Floating.svelte";
@@ -30,7 +32,7 @@
     const toggle = () => {
         if (open) {
             close();
-        } else if (Date.now() - closedAt > 150) {
+        } else if (Date.now() - closedAt > config.dismissDebounceMs) {
             open = true;
         }
     };

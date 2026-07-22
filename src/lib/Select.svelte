@@ -2,6 +2,7 @@
     import IconChevronDown from "@tabler/icons-svelte/icons/chevron-down";
 
     import { colorTransition, pressClasses } from "./constants/animations";
+    import { config } from "./constants/config.svelte";
 
     import Floating from "./Floating.svelte";
 
@@ -37,7 +38,7 @@
     };
 
     const show = () => {
-        if (Date.now() - closedAt <= 150) return;
+        if (Date.now() - closedAt <= config.dismissDebounceMs) return;
 
         open = true;
         highlighted = Math.max(selected, 0);

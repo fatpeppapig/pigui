@@ -4,6 +4,7 @@
     import type { Placement } from "./utils/floating";
 
     import { colorTransition } from "./constants/animations";
+    import { config } from "./constants/config.svelte";
 
     import Floating from "./Floating.svelte";
 
@@ -36,7 +37,7 @@
     const toggle = () => {
         if (open) {
             close();
-        } else if (Date.now() - closedAt > 150) {
+        } else if (Date.now() - closedAt > config.dismissDebounceMs) {
             highlighted = 0;
             open = true;
         }

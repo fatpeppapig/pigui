@@ -103,7 +103,6 @@
         {placeholder}
         value={display}
         oninput={(event) => input(event.currentTarget.value)}
-        onfocus={() => (open = true)}
         onclick={() => (open = true)}
         onblur={() => (open = false)}
         onkeydown={keydown}

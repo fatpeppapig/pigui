@@ -5,6 +5,7 @@ export type ComponentsConfig = {
     weekStart: 0 | 1;
     weekdayLabels: string[];
     monthLabels: string[];
+    dismissDebounceMs: number;
 };
 
 export const config: ComponentsConfig = $state({
@@ -12,6 +13,7 @@ export const config: ComponentsConfig = $state({
     timeFormat: "HH:mm",
     decimalSeparator: ".",
     weekStart: 1,
+    dismissDebounceMs: 300,
     weekdayLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     monthLabels: [
         "January",

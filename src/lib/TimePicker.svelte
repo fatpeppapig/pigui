@@ -3,6 +3,7 @@
 
     import { colorTransition, pressClasses } from "./constants/animations";
     import { config } from "./constants/config.svelte";
+
     import { formatTimeAs, nowTime, pad, parseTimeAs } from "./utils/datetime";
 
     import Floating from "./Floating.svelte";
@@ -52,7 +53,7 @@
     const toggle = () => {
         if (open) {
             close();
-        } else if (Date.now() - closedAt > 150) {
+        } else if (Date.now() - closedAt > config.dismissDebounceMs) {
             open = true;
         }
     };

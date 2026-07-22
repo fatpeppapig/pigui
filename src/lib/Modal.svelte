@@ -1,11 +1,13 @@
 <script lang="ts">
+    import "../styles/Modal.css";
+
     import type { Snippet } from "svelte";
 
     import IconX from "@tabler/icons-svelte/icons/x";
 
-    import Button from "./Button.svelte";
+    import { config } from "./constants/config.svelte";
 
-    import "../styles/Modal.css";
+    import Button from "./Button.svelte";
 
     type Props = {
         open: boolean;
@@ -17,17 +19,22 @@
     let { open, onClose, closeTitle = "Close", children }: Props = $props();
 
     let dialog: HTMLDialogElement;
+    let openedAt = 0;
 
     $effect(() => {
         if (open) {
             dialog.showModal();
+            openedAt = Date.now();
         } else {
             dialog.close();
         }
     });
 
     const backdropClick = (event: MouseEvent) => {
-        if (event.target === dialog) {
+        if (
+            event.target === dialog &&
+            Date.now() - openedAt > config.dismissDebounceMs
+        ) {
             dialog.close();
         }
     };

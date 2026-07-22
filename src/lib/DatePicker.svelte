@@ -5,6 +5,7 @@
 
     import { colorTransition, pressClasses } from "./constants/animations";
     import { config } from "./constants/config.svelte";
+
     import {
         formatDate,
         formatDateAs,
@@ -50,7 +51,7 @@
     const toggle = () => {
         if (open) {
             close();
-        } else if (Date.now() - closedAt > 150) {
+        } else if (Date.now() - closedAt > config.dismissDebounceMs) {
             const [year, month] = value.split("-").map(Number);
 
             view = { year, month };
