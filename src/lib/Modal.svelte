@@ -42,7 +42,7 @@
 
 <dialog
     bind:this={dialog}
-    class="pigui-modal relative m-auto flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg border border-border bg-surface-raised text-foreground backdrop:bg-scrim"
+    class="pigui-modal m-auto flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-lg border border-border bg-surface-raised text-foreground backdrop:bg-scrim"
     onclose={onClose}
     onclick={backdropClick}
 >

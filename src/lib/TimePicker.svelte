@@ -1,12 +1,14 @@
 <script lang="ts">
     import IconClock from "@tabler/icons-svelte/icons/clock";
 
-    import { colorTransition, pressClasses } from "./constants/animations";
+    import { colorTransition } from "./constants/animations";
     import { config } from "./constants/config.svelte";
 
     import { formatTimeAs, nowTime, pad, parseTimeAs } from "./utils/datetime";
 
+    import Button from "./Button.svelte";
     import Floating from "./Floating.svelte";
+    import Input from "./Input.svelte";
 
     type Props = {
         value?: string;
@@ -106,23 +108,24 @@
     bind:this={anchor}
     class="flex w-full h-full items-center gap-1 rounded-lg border border-border bg-surface px-2 py-1"
 >
-    <input
+    <Input
+        bare
         class="w-full min-w-0 bg-transparent"
         aria-label={label}
-        value={display}
-        oninput={(event) => (draft = event.currentTarget.value)}
+        bind:value={() => display, (text) => (draft = text)}
         onblur={commit}
         onkeydown={keydown}
     />
 
-    <button
+    <Button
+        bare
+        variant="none"
         type="button"
-        class={["cursor-pointer", pressClasses]}
-        aria-label={`${label} picker`}
-        onclick={toggle}
-    >
-        <IconClock class="h-4 w-4" />
-    </button>
+        class="cursor-pointer"
+        icon={IconClock}
+        title={`${label} picker`}
+        action={toggle}
+    />
 </div>
 
 <Floating {anchor} {open} placement="bottom-start" onClose={close}>
@@ -132,21 +135,21 @@
         <ul bind:this={hourList} class="flex flex-col gap-0.5 overflow-y-auto">
             {#each hours as hour (hour)}
                 <li>
-                    <button
+                    <Button
+                        bare
+                        variant="none"
                         type="button"
                         data-selected={parts[0] === hour}
+                        label={pad(hour)}
                         class={[
                             "w-12 cursor-pointer rounded-md border px-2 py-1 text-center",
-                            pressClasses,
                             colorTransition,
                             parts[0] === hour
                                 ? "border-accent bg-accent-soft"
                                 : "border-transparent hover:bg-muted",
                         ]}
-                        onclick={() => pickHour(hour)}
-                    >
-                        {pad(hour)}
-                    </button>
+                        action={() => pickHour(hour)}
+                    />
                 </li>
             {/each}
         </ul>
@@ -157,21 +160,21 @@
         >
             {#each minutes as minute (minute)}
                 <li>
-                    <button
+                    <Button
+                        bare
+                        variant="none"
                         type="button"
                         data-selected={parts[1] === minute}
+                        label={pad(minute)}
                         class={[
                             "w-12 cursor-pointer rounded-md border px-2 py-1 text-center",
-                            pressClasses,
                             colorTransition,
                             parts[1] === minute
                                 ? "border-accent bg-accent-soft"
                                 : "border-transparent hover:bg-muted",
                         ]}
-                        onclick={() => pickMinute(minute)}
-                    >
-                        {pad(minute)}
-                    </button>
+                        action={() => pickMinute(minute)}
+                    />
                 </li>
             {/each}
         </ul>

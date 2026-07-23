@@ -3,7 +3,7 @@
     import IconChevronLeft from "@tabler/icons-svelte/icons/chevron-left";
     import IconChevronRight from "@tabler/icons-svelte/icons/chevron-right";
 
-    import { colorTransition, pressClasses } from "./constants/animations";
+    import { colorTransition } from "./constants/animations";
     import { config } from "./constants/config.svelte";
 
     import {
@@ -13,7 +13,9 @@
         todayDate,
     } from "./utils/datetime";
 
+    import Button from "./Button.svelte";
     import Floating from "./Floating.svelte";
+    import Input from "./Input.svelte";
 
     type Props = {
         value?: string;
@@ -116,23 +118,24 @@
     bind:this={anchor}
     class="flex w-full h-full items-center gap-1 rounded-lg border border-border bg-surface px-2 py-1"
 >
-    <input
+    <Input
+        bare
         class="w-full min-w-0 bg-transparent"
         aria-label={label}
-        value={display}
-        oninput={(event) => (draft = event.currentTarget.value)}
+        bind:value={() => display, (text) => (draft = text)}
         onblur={commit}
         onkeydown={keydown}
     />
 
-    <button
+    <Button
+        bare
+        variant="none"
         type="button"
-        class={["cursor-pointer", pressClasses]}
-        aria-label={`${label} calendar`}
-        onclick={toggle}
-    >
-        <IconCalendar class="h-4 w-4" />
-    </button>
+        class="cursor-pointer"
+        icon={IconCalendar}
+        title={`${label} calendar`}
+        action={toggle}
+    />
 </div>
 
 <Floating {anchor} {open} placement="bottom-start" onClose={close}>
@@ -140,28 +143,30 @@
         class="flex w-64 flex-col gap-2 rounded-lg border border-border bg-surface-raised p-2 shadow-md"
     >
         <div class="flex items-center justify-between">
-            <button
+            <Button
+                bare
+                variant="none"
                 type="button"
-                class={["cursor-pointer p-1", pressClasses]}
-                aria-label={previousMonthLabel}
-                onclick={() => shiftMonth(-1)}
-            >
-                <IconChevronLeft class="h-4 w-4" />
-            </button>
+                class="cursor-pointer p-1"
+                icon={IconChevronLeft}
+                title={previousMonthLabel}
+                action={() => shiftMonth(-1)}
+            />
 
             <div class="font-bold">
                 {config.monthLabels[view.month - 1]}
                 {view.year}
             </div>
 
-            <button
+            <Button
+                bare
+                variant="none"
                 type="button"
-                class={["cursor-pointer p-1", pressClasses]}
-                aria-label={nextMonthLabel}
-                onclick={() => shiftMonth(1)}
-            >
-                <IconChevronRight class="h-4 w-4" />
-            </button>
+                class="cursor-pointer p-1"
+                icon={IconChevronRight}
+                title={nextMonthLabel}
+                action={() => shiftMonth(1)}
+            />
         </div>
 
         <div class="grid grid-cols-7 gap-1 text-center text-sm">
@@ -173,11 +178,13 @@
                 {#if day === null}
                     <div></div>
                 {:else}
-                    <button
+                    <Button
+                        bare
+                        variant="none"
                         type="button"
+                        label={String(day)}
                         class={[
                             "h-8 cursor-pointer rounded-md border",
-                            pressClasses,
                             colorTransition,
                             value === dateOf(day)
                                 ? "border-accent bg-accent-soft"
@@ -188,10 +195,8 @@
                                           : "border-transparent",
                                   ],
                         ]}
-                        onclick={() => pick(day)}
-                    >
-                        {day}
-                    </button>
+                        action={() => pick(day)}
+                    />
                 {/if}
             {/each}
         </div>

@@ -2,6 +2,7 @@
     import IconCaretDown from "@tabler/icons-svelte/icons/caret-down";
     import IconCaretUp from "@tabler/icons-svelte/icons/caret-up";
     import IconFilter from "@tabler/icons-svelte/icons/filter";
+    import IconLayoutColumns from "@tabler/icons-svelte/icons/layout-columns";
     import IconTrash from "@tabler/icons-svelte/icons/trash";
 
     import Button from "../Button.svelte";
@@ -17,6 +18,7 @@
         rows: T[];
         summary?: Partial<Record<keyof T & string, string | number>>;
         labels?: Partial<TableLabels>;
+        folded?: boolean;
         onEdit?: (
             row: T,
             key: keyof T & string,
@@ -31,6 +33,7 @@
         rows,
         summary,
         labels,
+        folded = $bindable(false),
         onEdit,
         onDelete,
         onRowClick,
@@ -39,6 +42,7 @@
     const defaultLabels: TableLabels = {
         filter: "Filter",
         toggleFilters: "toggle filters",
+        toggleFoldedColumns: "toggle folded columns",
         delete: "delete",
         deleteConfirm: "Delete",
         deleteTitle: "Delete Row?",
@@ -81,6 +85,11 @@
     let editing: { id: number | string; key: string } | null = $state(null);
     let draft: string | number = $state("");
     let deleting: T | null = $state(null);
+
+    const hasFoldableColumns = $derived(columns.some((c) => c.foldable));
+    const visibleColumns = $derived(
+        columns.filter((c) => !c.foldable || !folded),
+    );
 
     const compare = (a: unknown, b: unknown) =>
         typeof a === "number" && typeof b === "number"
@@ -199,11 +208,11 @@
     <div class="flex overflow-x-auto rounded-xl border border-border">
         <table
             class="w-full table-fixed border-collapse [&>tbody>tr:last-child>td]:border-b-0"
-            style:min-width={`${columns.length * 6 + 2}rem`}
+            style:min-width={`${visibleColumns.length * 6 + 2}rem`}
         >
             <thead>
                 <tr>
-                    {#each columns as column (column.key)}
+                    {#each visibleColumns as column (column.key)}
                         <th
                             class={[
                                 headClass,
@@ -214,45 +223,73 @@
                             ]}
                             style:width={column.width}
                         >
-                            <button
+                            <Button
+                                bare
+                                variant="none"
                                 class={[
                                     "w-full px-2 py-1 font-bold cursor-pointer flex items-center justify-between gap-1",
                                     alignClass(column),
                                     column.type === "number" &&
                                         "flex-row-reverse",
                                 ]}
-                                onclick={() => sortBy(column.key)}
+                                action={() => sortBy(column.key)}
                             >
-                                <span class="truncate">{column.label}</span>
+                                {#snippet children()}
+                                    <span class="truncate">{column.label}</span>
 
-                                {#if sortKey === column.key}
-                                    {#if sortDir === 1}
-                                        <IconCaretUp class="h-4 w-4" />
-                                    {:else}
-                                        <IconCaretDown class="h-4 w-4" />
+                                    {#if sortKey === column.key}
+                                        {#if sortDir === 1}
+                                            <IconCaretUp class="h-4 w-4" />
+                                        {:else}
+                                            <IconCaretDown class="h-4 w-4" />
+                                        {/if}
                                     {/if}
-                                {/if}
-                            </button>
+                                {/snippet}
+                            </Button>
                         </th>
                     {/each}
 
-                    <th class={[headClass, "w-8 p-0"]}>
-                        <button
-                            class={[
-                                "w-full px-2 py-1 cursor-pointer flex items-center justify-center",
-                                filtersVisible && "text-accent-foreground",
-                            ]}
-                            aria-label={effectiveLabels.toggleFilters}
-                            onclick={() => (filtersVisible = !filtersVisible)}
-                        >
-                            <IconFilter class="h-4 w-4" />
-                        </button>
+                    <th
+                        class={[
+                            headClass,
+                            "p-0",
+                            hasFoldableColumns ? "w-16" : "w-8",
+                        ]}
+                    >
+                        <div class="flex items-center justify-center h-full">
+                            {#if hasFoldableColumns}
+                                <Button
+                                    bare
+                                    variant="none"
+                                    icon={IconLayoutColumns}
+                                    title={effectiveLabels.toggleFoldedColumns}
+                                    class={[
+                                        "px-2 py-1 cursor-pointer flex items-center justify-center",
+                                        folded && "text-accent-foreground",
+                                    ]}
+                                    action={() => (folded = !folded)}
+                                />
+                            {/if}
+
+                            <Button
+                                bare
+                                variant="none"
+                                icon={IconFilter}
+                                title={effectiveLabels.toggleFilters}
+                                class={[
+                                    "px-2 py-1 cursor-pointer flex items-center justify-center",
+                                    filtersVisible && "text-accent-foreground",
+                                ]}
+                                action={() =>
+                                    (filtersVisible = !filtersVisible)}
+                            />
+                        </div>
                     </th>
                 </tr>
 
                 {#if filtersVisible}
                     <tr>
-                        {#each columns as column (column.key)}
+                        {#each visibleColumns as column (column.key)}
                             <th class={[headClass, "p-1 font-normal"]}>
                                 <Input
                                     placeholder={effectiveLabels.filter}
@@ -272,7 +309,7 @@
             <tbody>
                 {#each paged as row, index (row.id)}
                     <tr class={rowClass(index)}>
-                        {#each columns as column (column.key)}
+                        {#each visibleColumns as column (column.key)}
                             {#if editing?.id === row.id && editing.key === column.key}
                                 <td class={[cellClass, "p-1"]}>
                                     <Input
@@ -286,28 +323,36 @@
                                 </td>
                             {:else if editable(column)}
                                 <td class={[cellClass, "p-0"]}>
-                                    <button
+                                    <Button
+                                        bare
+                                        variant="none"
                                         class={[
                                             "w-full px-2 py-1 cursor-text truncate",
                                             alignClass(column),
                                         ]}
-                                        onclick={() => startEdit(row, column)}
+                                        action={() => startEdit(row, column)}
                                         onfocus={() => startEdit(row, column)}
                                     >
-                                        {display(row, column)}
-                                    </button>
+                                        {#snippet children()}
+                                            {display(row, column)}
+                                        {/snippet}
+                                    </Button>
                                 </td>
                             {:else if onRowClick}
                                 <td class={[cellClass, "p-0"]}>
-                                    <button
+                                    <Button
+                                        bare
+                                        variant="none"
                                         class={[
                                             "w-full px-2 py-1 cursor-pointer truncate",
                                             alignClass(column),
                                         ]}
-                                        onclick={() => onRowClick(row)}
+                                        action={() => onRowClick(row)}
                                     >
-                                        {display(row, column)}
-                                    </button>
+                                        {#snippet children()}
+                                            {display(row, column)}
+                                        {/snippet}
+                                    </Button>
                                 </td>
                             {:else}
                                 <td
@@ -324,13 +369,14 @@
 
                         <td class={[cellClass, "p-0 text-center"]}>
                             {#if onDelete}
-                                <button
+                                <Button
+                                    bare
+                                    variant="none"
+                                    icon={IconTrash}
+                                    title={effectiveLabels.delete}
                                     class="px-2 py-1 cursor-pointer align-middle"
-                                    aria-label={effectiveLabels.delete}
-                                    onclick={() => (deleting = row)}
-                                >
-                                    <IconTrash class="h-4 w-4" />
-                                </button>
+                                    action={() => (deleting = row)}
+                                />
                             {/if}
                         </td>
                     </tr>
@@ -338,7 +384,7 @@
                     <tr>
                         <td
                             class={[bodyClass, "px-2 py-1 text-center"]}
-                            colspan={columns.length + 1}
+                            colspan={visibleColumns.length + 1}
                         >
                             {effectiveLabels.noRows}
                         </td>
@@ -349,7 +395,7 @@
             {#if summary}
                 <tfoot>
                     <tr class={rowClass(paged.length)}>
-                        {#each columns as column (column.key)}
+                        {#each visibleColumns as column (column.key)}
                             <td
                                 class={[
                                     summaryClass,

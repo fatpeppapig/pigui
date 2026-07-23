@@ -4,11 +4,13 @@ export type Column<T> = {
     type?: "text" | "number";
     editable?: boolean;
     width?: string;
+    foldable?: boolean;
 };
 
 export type TableLabels = {
     filter: string;
     toggleFilters: string;
+    toggleFoldedColumns: string;
     delete: string;
     deleteConfirm: string;
     deleteTitle: string;

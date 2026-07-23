@@ -1,9 +1,15 @@
 export type Size = "sm" | "md" | "lg";
-export type Variant = "primary" | "secondary" | "tertiary" | "link";
+export type Variant = "primary" | "secondary" | "tertiary" | "link" | "none";
 export type Status = "danger" | "success" | "warning" | "info";
 
 export const SIZES: Size[] = ["sm", "md", "lg"];
-export const VARIANTS: Variant[] = ["primary", "secondary", "tertiary", "link"];
+export const VARIANTS: Variant[] = [
+    "primary",
+    "secondary",
+    "tertiary",
+    "link",
+    "none",
+];
 export const STATUSES: Status[] = ["danger", "success", "warning", "info"];
 
 export const DEFAULT_SIZE: Size = "md";
@@ -38,6 +44,7 @@ export const variantClasses: Record<Variant, string> = {
     secondary: "border border-border bg-surface text-foreground",
     tertiary: "border border-transparent bg-transparent text-foreground",
     link: "border border-transparent bg-transparent text-primary underline underline-offset-2",
+    none: "",
 };
 
 export const statusClasses: Record<Status, string> = {

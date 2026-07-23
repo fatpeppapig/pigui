@@ -1,7 +1,9 @@
 <script lang="ts" generics="V">
     import { colorTransition } from "./constants/animations";
 
+    import Button from "./Button.svelte";
     import Floating from "./Floating.svelte";
+    import Input from "./Input.svelte";
 
     type Option = {
         value: V;
@@ -98,11 +100,9 @@
 </script>
 
 <div bind:this={anchor} class="w-full">
-    <input
-        class="w-full bg-surface rounded-lg px-2 py-1 border border-border"
+    <Input
         {placeholder}
-        value={display}
-        oninput={(event) => input(event.currentTarget.value)}
+        bind:value={() => display, input}
         onclick={() => (open = true)}
         onblur={() => (open = false)}
         onkeydown={keydown}
@@ -123,7 +123,10 @@
     >
         {#each filtered as option, index (option.value)}
             <li>
-                <button
+                <Button
+                    bare
+                    variant="none"
+                    label={option.label}
                     class={[
                         "w-full px-2 py-1 text-left cursor-pointer",
                         colorTransition,
@@ -134,9 +137,7 @@
                         event.preventDefault();
                         select(option);
                     }}
-                >
-                    {option.label}
-                </button>
+                />
             </li>
         {/each}
     </ul>

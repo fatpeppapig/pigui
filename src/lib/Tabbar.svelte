@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { pressClasses } from "./constants/animations";
+    import Button from "./Button.svelte";
 
     type Item = {
         value: string | number;
@@ -66,23 +66,22 @@
     class="flex items-end gap-1 border-b border-border"
 >
     {#each items as item, index (item.value)}
-        <button
+        <Button
+            bare
+            variant="none"
             role="tab"
             aria-selected={value === item.value}
             tabindex={focusable(index) ? 0 : -1}
             disabled={item.disabled}
+            label={item.label}
             class={[
                 "-mb-px cursor-pointer rounded-t-md border-b-2 px-3 py-1.5",
-                pressClasses,
                 value === item.value
                     ? "border-accent font-bold"
                     : "border-transparent hover:bg-muted",
-                item.disabled && "opacity-50 pointer-events-none",
             ]}
-            onclick={() => select(item)}
+            action={() => select(item)}
             onkeydown={(event) => keydown(event, index)}
-        >
-            {item.label}
-        </button>
+        />
     {/each}
 </div>

@@ -6,6 +6,7 @@
     import { colorTransition } from "./constants/animations";
     import { config } from "./constants/config.svelte";
 
+    import Button from "./Button.svelte";
     import Floating from "./Floating.svelte";
 
     type Item = {
@@ -98,20 +99,20 @@
     >
         {#each items as item, index (item.label)}
             <li role="none">
-                <button
+                <Button
+                    bare
+                    variant="none"
                     role="menuitem"
                     disabled={item.disabled}
+                    label={item.label}
                     class={[
                         "w-full px-3 py-1.5 text-left cursor-pointer truncate",
                         colorTransition,
                         index === highlighted && "bg-muted",
-                        item.disabled && "opacity-50",
                     ]}
                     onpointerenter={() => (highlighted = index)}
-                    onclick={() => select(item)}
-                >
-                    {item.label}
-                </button>
+                    action={() => select(item)}
+                />
             </li>
         {/each}
     </ul>

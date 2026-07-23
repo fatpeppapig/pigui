@@ -1,29 +1,41 @@
 <script lang="ts">
+    import type { HTMLInputAttributes } from "svelte/elements";
+
     import { config } from "./constants/config.svelte";
     import { formatNumber, parseNumber, roundTo } from "./utils/number";
 
-    type Props = {
+    type Props = Omit<
+        HTMLInputAttributes,
+        "class" | "type" | "value" | "onblur" | "onfocus" | "onkeydown"
+    > & {
+        ref?: HTMLInputElement;
         value?: string | number;
         placeholder?: string;
         type?: string;
         decimals?: number;
         required?: boolean;
         autofocus?: boolean;
+        bare?: boolean;
+        class?: HTMLInputAttributes["class"];
         onblur?: () => void;
         onfocus?: () => void;
         onkeydown?: (event: KeyboardEvent) => void;
     };
 
     let {
+        ref = $bindable(),
         value = $bindable(""),
         placeholder,
         type = "text",
         decimals = 2,
         required,
         autofocus,
+        bare,
+        class: className,
         onblur,
         onfocus,
         onkeydown,
+        ...rest
     }: Props = $props();
 
     let draft: string | null = $state(null);
@@ -69,11 +81,17 @@
             node.select();
         });
     };
+
+    const inputClass = $derived([
+        !bare && "w-full bg-surface rounded-lg px-2 py-1 border border-border",
+        className,
+    ]);
 </script>
 
 {#if type === "number"}
     <input
-        class="w-full bg-surface rounded-lg px-2 py-1 border border-border"
+        bind:this={ref}
+        class={inputClass}
         use:init
         type="text"
         inputmode="decimal"
@@ -84,10 +102,12 @@
         onblur={numberBlur}
         {onfocus}
         onkeydown={numberKeydown}
+        {...rest}
     />
 {:else}
     <input
-        class="w-full bg-surface rounded-lg px-2 py-1 border border-border"
+        bind:this={ref}
+        class={inputClass}
         use:init
         {type}
         {placeholder}
@@ -96,5 +116,6 @@
         {onfocus}
         {onkeydown}
         bind:value
+        {...rest}
     />
 {/if}

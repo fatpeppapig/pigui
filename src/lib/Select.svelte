@@ -1,9 +1,12 @@
 <script lang="ts">
+    import type { HTMLButtonAttributes } from "svelte/elements";
+
     import IconChevronDown from "@tabler/icons-svelte/icons/chevron-down";
 
-    import { colorTransition, pressClasses } from "./constants/animations";
+    import { colorTransition } from "./constants/animations";
     import { config } from "./constants/config.svelte";
 
+    import Button from "./Button.svelte";
     import Floating from "./Floating.svelte";
 
     type Option = {
@@ -12,13 +15,27 @@
     };
 
     type Props = {
+        ref?: HTMLButtonElement;
         value?: string | number;
         options: Option[];
+        class?: HTMLButtonAttributes["class"];
+        disabled?: boolean;
+        id?: string;
+        name?: string;
+        "aria-label"?: string;
     };
 
-    let { value = $bindable(), options }: Props = $props();
+    let {
+        ref = $bindable(),
+        value = $bindable(),
+        options,
+        class: className,
+        disabled,
+        id,
+        name,
+        "aria-label": ariaLabel,
+    }: Props = $props();
 
-    let anchor: HTMLButtonElement | undefined = $state();
     let list: HTMLUListElement | undefined = $state();
     let open = $state(false);
     let highlighted = $state(0);
@@ -90,25 +107,29 @@
     };
 </script>
 
-<button
-    bind:this={anchor}
+<Button
+    bind:ref
+    bare
     class={[
-        "flex items-center gap-1 bg-surface rounded-lg px-2 py-1 border border-border cursor-pointer",
-        pressClasses,
+        "flex items-center gap-1 rounded-lg px-2 py-1 cursor-pointer",
+        className,
     ]}
+    icon={IconChevronDown}
+    iconPosition="right"
+    label={String(label)}
+    {disabled}
+    {id}
+    {name}
+    title={ariaLabel}
     aria-haspopup="listbox"
     aria-expanded={open}
-    onclick={() => (open ? close() : show())}
+    action={() => (open ? close() : show())}
     onblur={close}
     onkeydown={keydown}
->
-    {label}
-
-    <IconChevronDown class="h-4 w-4" />
-</button>
+/>
 
 <Floating
-    {anchor}
+    anchor={ref}
     {open}
     placement="bottom-start"
     offset={4}
@@ -122,7 +143,10 @@
     >
         {#each options as option, index (option.value)}
             <li role="option" aria-selected={index === selected}>
-                <button
+                <Button
+                    bare
+                    variant="none"
+                    label={String(option.label ?? option.value)}
                     class={[
                         "w-full px-2 py-1 text-left cursor-pointer",
                         colorTransition,
@@ -133,9 +157,7 @@
                         event.preventDefault();
                         commit(index);
                     }}
-                >
-                    {option.label ?? option.value}
-                </button>
+                />
             </li>
         {/each}
     </ul>
