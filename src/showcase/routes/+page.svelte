@@ -212,6 +212,26 @@
         },
     ];
 
+    const plainColumns: Column<Person>[] = [
+        { key: "name", label: "Name" },
+        { key: "role", label: "Role" },
+        { key: "age", label: "Age", type: "number", width: "6rem" },
+    ];
+
+    const foldableColumns: Column<Person>[] = [
+        { key: "name", label: "Name" },
+        { key: "role", label: "Role", foldable: true },
+        {
+            key: "age",
+            label: "Age",
+            type: "number",
+            width: "6rem",
+            foldable: true,
+        },
+    ];
+
+    let tableFolded = $state(false);
+
     let rows = $state<Person[]>([
         { id: 1, name: "Ada Lovelace", role: "Engineer", age: 36 },
         { id: 2, name: "Grace Hopper", role: "Admiral", age: 85 },
@@ -849,9 +869,25 @@
                 id="table"
                 title="Table"
                 source="import {'{ Table }'} from 'pigui'"
-                description="A sortable, editable data table with an optional summary row. Edit a cell or delete a row below."
+                description="A sortable data table with optional filtering, foldable columns, editing, and a summary row."
             >
-                <Demo inner="block w-full">
+                <Demo label="Plain" inner="block w-full">
+                    <Table columns={plainColumns} {rows} />
+                </Demo>
+
+                <Demo label="Filterable" inner="block w-full">
+                    <Table columns={plainColumns} {rows} filterable />
+                </Demo>
+
+                <Demo label="Foldable" inner="block w-full">
+                    <Table
+                        columns={foldableColumns}
+                        {rows}
+                        bind:folded={tableFolded}
+                    />
+                </Demo>
+
+                <Demo label="Editable" inner="block w-full">
                     <Table
                         {columns}
                         {rows}

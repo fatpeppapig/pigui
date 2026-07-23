@@ -19,6 +19,7 @@
         summary?: Partial<Record<keyof T & string, string | number>>;
         labels?: Partial<TableLabels>;
         folded?: boolean;
+        filterable?: boolean;
         onEdit?: (
             row: T,
             key: keyof T & string,
@@ -34,6 +35,7 @@
         summary,
         labels,
         folded = $bindable(false),
+        filterable = false,
         onEdit,
         onDelete,
         onRowClick,
@@ -96,16 +98,46 @@
             ? a - b
             : String(a).localeCompare(String(b));
 
+    const COMPARISON_PATTERN = /^(>=|<=|>|<)\s*(-?\d+(?:\.\d+)?)$/;
+
+    const matchesComparison = (needle: string, value: number) => {
+        const match = needle.match(COMPARISON_PATTERN);
+
+        if (!match) return null;
+
+        const target = Number(match[2]);
+
+        switch (match[1]) {
+            case ">":
+                return value > target;
+            case "<":
+                return value < target;
+            case ">=":
+                return value >= target;
+            default:
+                return value <= target;
+        }
+    };
+
     const filtered = $derived(
         rows.filter((row) =>
             Object.entries(filters).every(([key, filter]) => {
-                const needle = filter.trim().toLowerCase();
+                const needle = filter.trim();
 
                 if (!needle) return true;
 
-                return String(row[key as keyof T] ?? "")
+                const value = row[key as keyof T];
+                const column = columns.find((c) => c.key === key);
+
+                if (column?.type === "number" && typeof value === "number") {
+                    const comparison = matchesComparison(needle, value);
+
+                    if (comparison !== null) return comparison;
+                }
+
+                return String(value ?? "")
                     .toLowerCase()
-                    .includes(needle);
+                    .includes(needle.toLowerCase());
             }),
         ),
     );
@@ -253,7 +285,7 @@
                         class={[
                             headClass,
                             "p-0",
-                            hasFoldableColumns ? "w-16" : "w-8",
+                            hasFoldableColumns && filterable ? "w-16" : "w-8",
                         ]}
                     >
                         <div class="flex items-center justify-center h-full">
@@ -265,29 +297,32 @@
                                     title={effectiveLabels.toggleFoldedColumns}
                                     class={[
                                         "px-2 py-1 cursor-pointer flex items-center justify-center",
-                                        folded && "text-accent-foreground",
+                                        !folded && "text-danger",
                                     ]}
                                     action={() => (folded = !folded)}
                                 />
                             {/if}
 
-                            <Button
-                                bare
-                                variant="none"
-                                icon={IconFilter}
-                                title={effectiveLabels.toggleFilters}
-                                class={[
-                                    "px-2 py-1 cursor-pointer flex items-center justify-center",
-                                    filtersVisible && "text-accent-foreground",
-                                ]}
-                                action={() =>
-                                    (filtersVisible = !filtersVisible)}
-                            />
+                            {#if filterable}
+                                <Button
+                                    bare
+                                    variant="none"
+                                    icon={IconFilter}
+                                    title={effectiveLabels.toggleFilters}
+                                    class={[
+                                        "px-2 py-1 cursor-pointer flex items-center justify-center",
+                                        filtersVisible &&
+                                            "text-accent-foreground",
+                                    ]}
+                                    action={() =>
+                                        (filtersVisible = !filtersVisible)}
+                                />
+                            {/if}
                         </div>
                     </th>
                 </tr>
 
-                {#if filtersVisible}
+                {#if filterable && filtersVisible}
                     <tr>
                         {#each visibleColumns as column (column.key)}
                             <th class={[headClass, "p-1 font-normal"]}>
