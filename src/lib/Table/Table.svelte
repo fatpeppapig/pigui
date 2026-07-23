@@ -89,8 +89,13 @@
     let deleting: T | null = $state(null);
 
     const hasFoldableColumns = $derived(columns.some((c) => c.foldable));
+
     const visibleColumns = $derived(
         columns.filter((c) => !c.foldable || !folded),
+    );
+
+    const hasActionsColumn = $derived(
+        onDelete !== undefined || filterable || hasFoldableColumns,
     );
 
     const compare = (a: unknown, b: unknown) =>
@@ -240,7 +245,7 @@
     <div class="flex overflow-x-auto rounded-xl border border-border">
         <table
             class="w-full table-fixed border-collapse [&>tbody>tr:last-child>td]:border-b-0"
-            style:min-width={`${visibleColumns.length * 6 + 2}rem`}
+            style:min-width={`${visibleColumns.length * 6 + (hasActionsColumn ? 2 : 0)}rem`}
         >
             <thead>
                 <tr>
@@ -281,45 +286,51 @@
                         </th>
                     {/each}
 
-                    <th
-                        class={[
-                            headClass,
-                            "p-0",
-                            hasFoldableColumns && filterable ? "w-16" : "w-8",
-                        ]}
-                    >
-                        <div class="flex items-center justify-center h-full">
-                            {#if hasFoldableColumns}
-                                <Button
-                                    bare
-                                    variant="none"
-                                    icon={IconLayoutColumns}
-                                    title={effectiveLabels.toggleFoldedColumns}
-                                    class={[
-                                        "px-2 py-1 cursor-pointer flex items-center justify-center",
-                                        !folded && "text-danger",
-                                    ]}
-                                    action={() => (folded = !folded)}
-                                />
-                            {/if}
+                    {#if hasActionsColumn}
+                        <th
+                            class={[
+                                headClass,
+                                "p-0",
+                                hasFoldableColumns && filterable
+                                    ? "w-16"
+                                    : "w-8",
+                            ]}
+                        >
+                            <div
+                                class="flex items-center justify-center h-full"
+                            >
+                                {#if hasFoldableColumns}
+                                    <Button
+                                        bare
+                                        variant="none"
+                                        icon={IconLayoutColumns}
+                                        title={effectiveLabels.toggleFoldedColumns}
+                                        class={[
+                                            "px-2 py-1 cursor-pointer flex items-center justify-center",
+                                            !folded && "text-danger",
+                                        ]}
+                                        action={() => (folded = !folded)}
+                                    />
+                                {/if}
 
-                            {#if filterable}
-                                <Button
-                                    bare
-                                    variant="none"
-                                    icon={IconFilter}
-                                    title={effectiveLabels.toggleFilters}
-                                    class={[
-                                        "px-2 py-1 cursor-pointer flex items-center justify-center",
-                                        filtersVisible &&
-                                            "text-accent-foreground",
-                                    ]}
-                                    action={() =>
-                                        (filtersVisible = !filtersVisible)}
-                                />
-                            {/if}
-                        </div>
-                    </th>
+                                {#if filterable}
+                                    <Button
+                                        bare
+                                        variant="none"
+                                        icon={IconFilter}
+                                        title={effectiveLabels.toggleFilters}
+                                        class={[
+                                            "px-2 py-1 cursor-pointer flex items-center justify-center",
+                                            filtersVisible &&
+                                                "text-accent-foreground",
+                                        ]}
+                                        action={() =>
+                                            (filtersVisible = !filtersVisible)}
+                                    />
+                                {/if}
+                            </div>
+                        </th>
+                    {/if}
                 </tr>
 
                 {#if filterable && filtersVisible}
@@ -336,7 +347,9 @@
                             </th>
                         {/each}
 
-                        <th class={headClass}></th>
+                        {#if hasActionsColumn}
+                            <th class={headClass}></th>
+                        {/if}
                     </tr>
                 {/if}
             </thead>
@@ -402,24 +415,27 @@
                             {/if}
                         {/each}
 
-                        <td class={[cellClass, "p-0 text-center"]}>
-                            {#if onDelete}
-                                <Button
-                                    bare
-                                    variant="none"
-                                    icon={IconTrash}
-                                    title={effectiveLabels.delete}
-                                    class="px-2 py-1 cursor-pointer align-middle"
-                                    action={() => (deleting = row)}
-                                />
-                            {/if}
-                        </td>
+                        {#if hasActionsColumn}
+                            <td class={[cellClass, "p-0 text-center"]}>
+                                {#if onDelete}
+                                    <Button
+                                        bare
+                                        variant="none"
+                                        icon={IconTrash}
+                                        title={effectiveLabels.delete}
+                                        class="px-2 py-1 cursor-pointer align-middle"
+                                        action={() => (deleting = row)}
+                                    />
+                                {/if}
+                            </td>
+                        {/if}
                     </tr>
                 {:else}
                     <tr>
                         <td
                             class={[bodyClass, "px-2 py-1 text-center"]}
-                            colspan={visibleColumns.length + 1}
+                            colspan={visibleColumns.length +
+                                (hasActionsColumn ? 1 : 0)}
                         >
                             {effectiveLabels.noRows}
                         </td>
@@ -442,7 +458,9 @@
                             </td>
                         {/each}
 
-                        <td class={summaryClass}></td>
+                        {#if hasActionsColumn}
+                            <td class={summaryClass}></td>
+                        {/if}
                     </tr>
                 </tfoot>
             {/if}
