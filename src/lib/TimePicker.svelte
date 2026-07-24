@@ -106,7 +106,7 @@
 
 <div
     bind:this={anchor}
-    class="flex w-full h-full items-center gap-1 rounded-lg border border-border bg-surface px-2 py-1"
+    class="flex w-full h-full min-w-28 items-center gap-1 rounded-lg border border-border bg-surface px-2 py-1"
 >
     <Input
         bare
