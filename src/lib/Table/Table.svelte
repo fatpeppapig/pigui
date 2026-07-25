@@ -13,9 +13,26 @@
 
     import type { Column, TableLabels } from "./types";
 
+    const PAGE_SIZE_KEY = "table-page-size";
+    const PAGE_SIZES = [5, 10, 25, 50, 100].map((size) => ({ value: size }));
+    const DEFAULT_PAGE_SIZE = 25;
+
+    const storedPageSize = (): number | null => {
+        try {
+            return JSON.parse(localStorage.getItem(PAGE_SIZE_KEY) ?? "null");
+        } catch {
+            return null;
+        }
+    };
+
     type Props = {
         columns: Column<T>[];
         rows: T[];
+        total?: number;
+        page?: number;
+        pageSize?: number;
+        sortKey?: (keyof T & string) | null;
+        sortDir?: 1 | -1;
         summary?: Partial<Record<keyof T & string, string | number>>;
         labels?: Partial<TableLabels>;
         folded?: boolean;
@@ -32,6 +49,11 @@
     let {
         columns,
         rows,
+        total,
+        page = $bindable(1),
+        pageSize = $bindable(storedPageSize() ?? DEFAULT_PAGE_SIZE),
+        sortKey = $bindable(null),
+        sortDir = $bindable(1),
         summary,
         labels,
         folded = $bindable(false),
@@ -61,29 +83,12 @@
 
     const effectiveLabels = $derived({ ...defaultLabels, ...labels });
 
-    const PAGE_SIZE_KEY = "table-page-size";
-    const PAGE_SIZES = [5, 10, 25, 50, 100].map((size) => ({ value: size }));
-    const DEFAULT_PAGE_SIZE = 25;
-
-    const storedPageSize = (): number | null => {
-        try {
-            return JSON.parse(localStorage.getItem(PAGE_SIZE_KEY) ?? "null");
-        } catch {
-            return null;
-        }
-    };
-
-    let pageSize = $state(storedPageSize() ?? DEFAULT_PAGE_SIZE);
-
     $effect(() => {
         localStorage.setItem(PAGE_SIZE_KEY, JSON.stringify(pageSize));
     });
 
-    let sortKey: string | null = $state(null);
-    let sortDir: 1 | -1 = $state(1);
     let filters: Record<string, string> = $state({});
     let filtersVisible = $state(false);
-    let page = $state(1);
     let editing: { id: number | string; key: string } | null = $state(null);
     let draft: string | number = $state("");
     let deleting: T | null = $state(null);
@@ -147,21 +152,32 @@
         ),
     );
 
-    const sorted = $derived.by(() => {
-        const key = sortKey as (keyof T & string) | null;
+    const serverPaged = $derived(total !== undefined);
 
-        if (key === null) return filtered;
+    const sorted = $derived.by(() => {
+        const key = sortKey;
+
+        if (serverPaged || key === null) return filtered;
 
         return [...filtered].sort((a, b) => compare(a[key], b[key]) * sortDir);
     });
 
-    const pages = $derived(Math.max(1, Math.ceil(sorted.length / pageSize)));
-    const current = $derived(Math.min(page, pages));
-    const paged = $derived(
-        sorted.slice((current - 1) * pageSize, current * pageSize),
+    const pages = $derived(
+        Math.max(
+            1,
+            Math.ceil((serverPaged ? (total ?? 0) : sorted.length) / pageSize),
+        ),
     );
 
-    const sortBy = (key: string) => {
+    const current = $derived(Math.min(page, pages));
+
+    const paged = $derived(
+        serverPaged
+            ? sorted
+            : sorted.slice((current - 1) * pageSize, current * pageSize),
+    );
+
+    const sortBy = (key: keyof T & string) => {
         if (sortKey !== key) {
             sortKey = key;
             sortDir = 1;
@@ -233,6 +249,7 @@
 
     const bodyClass = [cellClass, "bg-surface"];
     const headClass = [cellClass, "bg-secondary"];
+
     const summaryClass = [
         "border-t border-r last:border-r-0 border-border h-12 truncate",
     ];
@@ -469,7 +486,7 @@
 
     <div class="flex items-center justify-between flex-wrap gap-y-2 py-1 mt-4">
         <div class="hidden md:flex w-1/2 md:w-1/3">
-            {effectiveLabels.rows(sorted.length)}
+            {effectiveLabels.rows(serverPaged ? (total ?? 0) : sorted.length)}
         </div>
 
         {#if pages > 1}
