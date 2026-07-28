@@ -39,16 +39,29 @@
             el.style.width = `${anchor.offsetWidth}px`;
         }
 
+        const vv = window.visualViewport;
+        const offsetLeft = vv?.offsetLeft ?? 0;
+        const offsetTop = vv?.offsetTop ?? 0;
+        const viewportWidth = vv?.width ?? window.innerWidth;
+        const viewportHeight = vv?.height ?? window.innerHeight;
+
+        const anchorRect = anchor.getBoundingClientRect();
+
         const placed = computePosition(
-            anchor.getBoundingClientRect(),
+            {
+                top: anchorRect.top - offsetTop,
+                left: anchorRect.left - offsetLeft,
+                width: anchorRect.width,
+                height: anchorRect.height,
+            },
             { width: el.offsetWidth, height: el.offsetHeight },
-            { width: window.innerWidth, height: window.innerHeight },
+            { width: viewportWidth, height: viewportHeight },
             placement,
             offset,
         );
 
-        el.style.top = `${placed.top}px`;
-        el.style.left = `${placed.left}px`;
+        el.style.top = `${placed.top + offsetTop}px`;
+        el.style.left = `${placed.left + offsetLeft}px`;
         side = placed.side;
     };
 
@@ -62,12 +75,18 @@
 
             position();
 
+            const vv = window.visualViewport;
+
             window.addEventListener("scroll", position, true);
             window.addEventListener("resize", position);
+            vv?.addEventListener("resize", position);
+            vv?.addEventListener("scroll", position);
 
             return () => {
                 window.removeEventListener("scroll", position, true);
                 window.removeEventListener("resize", position);
+                vv?.removeEventListener("resize", position);
+                vv?.removeEventListener("scroll", position);
             };
         }
 
