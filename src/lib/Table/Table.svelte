@@ -210,6 +210,8 @@
     };
 
     const startEdit = (row: T, column: Column<T>) => {
+        if (editing?.id === row.id && editing.key === column.key) return;
+
         editing = { id: row.id, key: column.key };
         draft = String(row[column.key] ?? "");
     };

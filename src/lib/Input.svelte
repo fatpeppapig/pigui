@@ -78,7 +78,29 @@
 
         requestAnimationFrame(() => {
             node.focus();
-            node.select();
+
+            const viewport = window.visualViewport;
+
+            if (!viewport) {
+                node.select();
+
+                return;
+            }
+
+            let settled = false;
+
+            const select = () => {
+                if (settled) return;
+
+                settled = true;
+                clearTimeout(fallback);
+                viewport.removeEventListener("resize", select);
+                node.select();
+            };
+
+            const fallback = setTimeout(select, 400);
+
+            viewport.addEventListener("resize", select);
         });
     };
 
