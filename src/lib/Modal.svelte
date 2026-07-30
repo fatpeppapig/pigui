@@ -46,7 +46,7 @@
     onclose={onClose}
     onclick={backdropClick}
 >
-    <div class="pigui-modal-content flex min-h-0 flex-1 flex-col">
+    <div class="pigui-modal-content flex min-h-0 flex-col">
         <div class="w-8 h-8 absolute right-4 top-4 z-10">
             <Button
                 icon={IconX}
