@@ -46,16 +46,18 @@
     onclose={onClose}
     onclick={backdropClick}
 >
-    <div class="w-8 h-8 absolute right-4 top-4 z-10">
-        <Button
-            icon={IconX}
-            round
-            title={closeTitle}
-            action={() => dialog.close()}
-        />
-    </div>
+    <div class="pigui-modal-content flex min-h-0 flex-1 flex-col">
+        <div class="w-8 h-8 absolute right-4 top-4 z-10">
+            <Button
+                icon={IconX}
+                round
+                title={closeTitle}
+                action={() => dialog.close()}
+            />
+        </div>
 
-    <div class="pigui-modal-scroll min-h-0 overflow-auto">
-        {@render children()}
+        <div class="pigui-modal-scroll min-h-0 overflow-auto">
+            {@render children()}
+        </div>
     </div>
 </dialog>
