@@ -5,8 +5,10 @@ body:has(.pigui-modal[open]) {
 .pigui-modal {
     display: none;
     opacity: 0;
+    transform: scale(0.95) translateY(10px);
     transition:
         opacity 200ms ease,
+        transform 200ms ease,
         overlay 200ms ease allow-discrete,
         display 200ms ease allow-discrete;
 }
@@ -14,14 +16,6 @@ body:has(.pigui-modal[open]) {
 .pigui-modal[open] {
     display: flex;
     opacity: 1;
-}
-
-.pigui-modal-content {
-    transform: scale(0.95) translateY(10px);
-    transition: transform 200ms ease;
-}
-
-.pigui-modal[open] .pigui-modal-content {
     transform: none;
 }
 
@@ -40,9 +34,6 @@ body:has(.pigui-modal[open]) {
 @starting-style {
     .pigui-modal[open] {
         opacity: 0;
-    }
-
-    .pigui-modal[open] .pigui-modal-content {
         transform: scale(0.95) translateY(10px);
     }
 
@@ -75,7 +66,6 @@ body:has(.pigui-modal[open]) {
 
 @media (prefers-reduced-motion: reduce) {
     .pigui-modal,
-    .pigui-modal-content,
     .pigui-modal::backdrop {
         transition: none;
         transform: none;
