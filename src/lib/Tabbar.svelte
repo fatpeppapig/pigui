@@ -75,10 +75,10 @@
             disabled={item.disabled}
             label={item.label}
             class={[
-                "-mb-px cursor-pointer rounded-t-md border-b-2 px-3 py-1.5",
+                "-mb-px cursor-pointer border-b-2 px-3 py-1.5",
                 value === item.value
                     ? "border-accent font-bold"
-                    : "border-transparent hover:bg-muted",
+                    : "border-transparent hover:border-border",
             ]}
             action={() => select(item)}
             onkeydown={(event) => keydown(event, index)}
