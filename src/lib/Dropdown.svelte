@@ -95,7 +95,7 @@
         bind:this={list}
         role="menu"
         aria-label={label}
-        class="min-w-40 max-h-64 overflow-y-auto rounded-lg border border-border bg-surface py-1 shadow-md"
+        class="min-w-40 max-h-96 overflow-y-auto rounded-lg border border-border bg-surface py-1 shadow-md"
     >
         {#each items as item, index (item.label)}
             <li role="none">
