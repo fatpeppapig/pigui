@@ -1,48 +1,82 @@
 <script lang="ts">
     import { browser } from "$app/environment";
-    import { createRawSnippet, onMount } from "svelte";
+    import { onMount } from "svelte";
 
     import IconBrandGithub from "@tabler/icons-svelte/icons/brand-github";
-    import IconClock from "@tabler/icons-svelte/icons/clock";
 
-    import {
-        Accordion,
-        Alert,
-        Badge,
-        Breadcrumbs,
-        Button,
-        ButtonGroup,
-        Card,
-        CopyButton,
-        DatePicker,
-        DateSelector,
-        Dialog,
-        Dropdown,
-        Floating,
-        Input,
-        Loader,
-        Modal,
-        Navbar,
-        Pagination,
-        Popover,
-        Progress,
-        SearchSelect,
-        Select,
-        SIZES,
-        STATUSES,
-        Table,
-        Tabbar,
-        TimePicker,
-        TimeSelector,
-        ToastContainer,
-        Tooltip,
-        VARIANTS,
-        showToast,
-        type Column,
-    } from "pigui";
+    import { Button, CopyButton, Navbar, Tabbar, ToastContainer } from "pigui";
 
     import Demo from "$lib/Demo.svelte";
     import Section from "$lib/Section.svelte";
+
+    import ButtonVariantsDemo from "$lib/demos/button-variants.svelte";
+    import buttonVariantsCode from "$lib/demos/button-variants.svelte?raw";
+    import ButtonSizesDemo from "$lib/demos/button-sizes.svelte";
+    import buttonSizesCode from "$lib/demos/button-sizes.svelte?raw";
+    import ButtonIconsStatesDemo from "$lib/demos/button-icons-states.svelte";
+    import buttonIconsStatesCode from "$lib/demos/button-icons-states.svelte?raw";
+    import BadgeVariantsStatusesDemo from "$lib/demos/badge-variants-statuses.svelte";
+    import badgeVariantsStatusesCode from "$lib/demos/badge-variants-statuses.svelte?raw";
+    import BadgeSizesDemo from "$lib/demos/badge-sizes.svelte";
+    import badgeSizesCode from "$lib/demos/badge-sizes.svelte?raw";
+    import LoaderDemo from "$lib/demos/loader.svelte";
+    import loaderCode from "$lib/demos/loader.svelte?raw";
+    import ProgressDemo from "$lib/demos/progress.svelte";
+    import progressCode from "$lib/demos/progress.svelte?raw";
+    import InputDemo from "$lib/demos/input.svelte";
+    import inputCode from "$lib/demos/input.svelte?raw";
+    import SelectDemo from "$lib/demos/select.svelte";
+    import selectCode from "$lib/demos/select.svelte?raw";
+    import CardDemo from "$lib/demos/card.svelte";
+    import cardCode from "$lib/demos/card.svelte?raw";
+    import ButtonGroupDemo from "$lib/demos/button-group.svelte";
+    import buttonGroupCode from "$lib/demos/button-group.svelte?raw";
+    import CopyButtonDemo from "$lib/demos/copy-button.svelte";
+    import copyButtonCode from "$lib/demos/copy-button.svelte?raw";
+    import AlertDemo from "$lib/demos/alert.svelte";
+    import alertCode from "$lib/demos/alert.svelte?raw";
+    import TooltipDemo from "$lib/demos/tooltip.svelte";
+    import tooltipCode from "$lib/demos/tooltip.svelte?raw";
+    import TabbarDemo from "$lib/demos/tabbar.svelte";
+    import tabbarCode from "$lib/demos/tabbar.svelte?raw";
+    import BreadcrumbsDemo from "$lib/demos/breadcrumbs.svelte";
+    import breadcrumbsCode from "$lib/demos/breadcrumbs.svelte?raw";
+    import PaginationDemo from "$lib/demos/pagination.svelte";
+    import paginationCode from "$lib/demos/pagination.svelte?raw";
+    import ModalDemo from "$lib/demos/modal.svelte";
+    import modalCode from "$lib/demos/modal.svelte?raw";
+    import DialogDemo from "$lib/demos/dialog.svelte";
+    import dialogCode from "$lib/demos/dialog.svelte?raw";
+    import PopoverDemo from "$lib/demos/popover.svelte";
+    import popoverCode from "$lib/demos/popover.svelte?raw";
+    import DropdownDemo from "$lib/demos/dropdown.svelte";
+    import dropdownCode from "$lib/demos/dropdown.svelte?raw";
+    import FloatingDemo from "$lib/demos/floating.svelte";
+    import floatingCode from "$lib/demos/floating.svelte?raw";
+    import NavbarDemo from "$lib/demos/navbar.svelte";
+    import navbarCode from "$lib/demos/navbar.svelte?raw";
+    import ToastDemo from "$lib/demos/toast.svelte";
+    import toastCode from "$lib/demos/toast.svelte?raw";
+    import SearchSelectDemo from "$lib/demos/search-select.svelte";
+    import searchSelectCode from "$lib/demos/search-select.svelte?raw";
+    import DateSelectorDemo from "$lib/demos/date-selector.svelte";
+    import dateSelectorCode from "$lib/demos/date-selector.svelte?raw";
+    import TimeSelectorDemo from "$lib/demos/time-selector.svelte";
+    import timeSelectorCode from "$lib/demos/time-selector.svelte?raw";
+    import DatePickerDemo from "$lib/demos/date-picker.svelte";
+    import datePickerCode from "$lib/demos/date-picker.svelte?raw";
+    import TimePickerDemo from "$lib/demos/time-picker.svelte";
+    import timePickerCode from "$lib/demos/time-picker.svelte?raw";
+    import AccordionDemo from "$lib/demos/accordion.svelte";
+    import accordionCode from "$lib/demos/accordion.svelte?raw";
+    import TablePlainDemo from "$lib/demos/table-plain.svelte";
+    import tablePlainCode from "$lib/demos/table-plain.svelte?raw";
+    import TableFilterableDemo from "$lib/demos/table-filterable.svelte";
+    import tableFilterableCode from "$lib/demos/table-filterable.svelte?raw";
+    import TableFoldableDemo from "$lib/demos/table-foldable.svelte";
+    import tableFoldableCode from "$lib/demos/table-foldable.svelte?raw";
+    import TableEditableDemo from "$lib/demos/table-editable.svelte";
+    import tableEditableCode from "$lib/demos/table-editable.svelte?raw";
 
     const REPO = "https://github.com/fatpeppapig/pigui";
 
@@ -111,137 +145,6 @@
     });
 
     let activeId = $state("button");
-
-    let modalOpen = $state(false);
-    let dialogOpen = $state(false);
-
-    let floatingAnchor = $state<HTMLElement>();
-    let floatingOpen = $state(false);
-
-    let tab = $state<string | number>("home");
-
-    const tabItems = [
-        { value: "home", label: "Home" },
-        { value: "reports", label: "Reports" },
-        { value: "settings", label: "Settings" },
-    ];
-
-    let page = $state(3);
-
-    let selectValue = $state<string | number>("md");
-
-    const selectOptions = [
-        { value: "sm", label: "Small" },
-        { value: "md", label: "Medium" },
-        { value: "lg", label: "Large" },
-    ];
-
-    let fruit = $state<string | null>(null);
-
-    const fruitOptions = [
-        { value: "apple", label: "Apple" },
-        { value: "banana", label: "Banana" },
-        { value: "cherry", label: "Cherry" },
-        { value: "grape", label: "Grape" },
-        { value: "orange", label: "Orange" },
-        { value: "pear", label: "Pear" },
-        { value: "plum", label: "Plum" },
-    ];
-
-    let inputText = $state("");
-    let inputNumber = $state<string | number>(1234.5);
-    let inputPassword = $state("");
-
-    let dateValue = $state("2026-07-15");
-    let dateSelValue = $state("2026-07-15");
-    let timeValue = $state("14:30");
-    let timeSelValue = $state("14:30");
-
-    const dropdownItems = [
-        { label: "Rename", onSelect: () => showToast("Renamed") },
-        { label: "Duplicate", onSelect: () => showToast("Duplicated") },
-        { label: "Archive", disabled: true },
-        {
-            label: "Delete",
-            onSelect: () => showToast("Deleted", { status: "danger" }),
-        },
-    ];
-
-    const breadcrumbItems = [
-        { label: "Home", href: "#" },
-        { label: "Components", href: "#" },
-        { label: "Breadcrumbs" },
-    ];
-
-    const paragraph = (text: string) =>
-        createRawSnippet(() => ({ render: () => `<p>${text}</p>` }));
-
-    const accordionItems = [
-        {
-            title: "What is PigUI?",
-            content: paragraph(
-                "A Svelte 5 component library themed entirely by Tailwind CSS semantic tokens.",
-            ),
-            open: true,
-        },
-        {
-            title: "How is it themed?",
-            content: paragraph(
-                "Every color comes from a semantic token defined in theme.css.",
-            ),
-        },
-        {
-            title: "Does it support dark mode?",
-            content: paragraph(
-                "Yes — tokens use light-dark(), so the color-scheme property switches the palette.",
-            ),
-        },
-    ];
-
-    type Person = { id: number; name: string; role: string; age: number };
-
-    const columns: Column<Person>[] = [
-        { key: "name", label: "Name", editable: true },
-        { key: "role", label: "Role", editable: true },
-        {
-            key: "age",
-            label: "Age",
-            type: "number",
-            width: "6rem",
-            editable: true,
-        },
-    ];
-
-    const plainColumns: Column<Person>[] = [
-        { key: "name", label: "Name" },
-        { key: "role", label: "Role" },
-        { key: "age", label: "Age", type: "number", width: "6rem" },
-    ];
-
-    const foldableColumns: Column<Person>[] = [
-        { key: "name", label: "Name" },
-        { key: "role", label: "Role", foldable: true },
-        {
-            key: "age",
-            label: "Age",
-            type: "number",
-            width: "6rem",
-            foldable: true,
-        },
-    ];
-
-    let tableFolded = $state(false);
-
-    let rows = $state<Person[]>([
-        { id: 1, name: "Ada Lovelace", role: "Engineer", age: 36 },
-        { id: 2, name: "Grace Hopper", role: "Admiral", age: 85 },
-        { id: 3, name: "Alan Turing", role: "Mathematician", age: 41 },
-        { id: 4, name: "Margaret Hamilton", role: "Engineer", age: 88 },
-        { id: 5, name: "Katherine Johnson", role: "Mathematician", age: 101 },
-        { id: 6, name: "Edsger Dijkstra", role: "Professor", age: 72 },
-    ]);
-
-    const totalAge = $derived(rows.reduce((sum, p) => sum + p.age, 0));
 
     onMount(() => {
         const sections = [...document.querySelectorAll("section[id]")];
@@ -368,32 +271,16 @@
                 source="import {'{ Button }'} from 'pigui'"
                 description="Four variants across three sizes, with optional icons and a round icon-only mode."
             >
-                <Demo label="Variants">
-                    {#each VARIANTS as variant (variant)}
-                        <Button {variant} label={variant} />
-                    {/each}
+                <Demo label="Variants" code={buttonVariantsCode}>
+                    <ButtonVariantsDemo />
                 </Demo>
 
-                <Demo label="Sizes">
-                    {#each SIZES as size (size)}
-                        <Button variant="primary" {size} label={size} />
-                    {/each}
+                <Demo label="Sizes" code={buttonSizesCode}>
+                    <ButtonSizesDemo />
                 </Demo>
 
-                <Demo label="Icons & states">
-                    <Button
-                        variant="secondary"
-                        icon={IconClock}
-                        label="With icon"
-                    />
-
-                    <Button
-                        variant="secondary"
-                        icon={IconClock}
-                        round
-                        title="Clock"
-                    />
-                    <Button variant="primary" label="Disabled" disabled />
+                <Demo label="Icons & states" code={buttonIconsStatesCode}>
+                    <ButtonIconsStatesDemo />
                 </Demo>
             </Section>
 
@@ -403,16 +290,15 @@
                 source="import {'{ Badge }'} from 'pigui'"
                 description="Compact labels that share the variant and status palettes."
             >
-                <Demo label="Variants & statuses">
-                    {#each [...VARIANTS, ...STATUSES] as variant (variant)}
-                        <Badge {variant} label={variant} />
-                    {/each}
+                <Demo
+                    label="Variants & statuses"
+                    code={badgeVariantsStatusesCode}
+                >
+                    <BadgeVariantsStatusesDemo />
                 </Demo>
 
-                <Demo label="Sizes">
-                    {#each SIZES as size (size)}
-                        <Badge {size} label={size} />
-                    {/each}
+                <Demo label="Sizes" code={badgeSizesCode}>
+                    <BadgeSizesDemo />
                 </Demo>
             </Section>
 
@@ -422,10 +308,8 @@
                 source="import {'{ Loader }'} from 'pigui'"
                 description="A minimal spinner for pending states."
             >
-                <Demo>
-                    <Loader />
-
-                    <Loader label="Loading…" />
+                <Demo code={loaderCode}>
+                    <LoaderDemo />
                 </Demo>
             </Section>
 
@@ -435,12 +319,8 @@
                 source="import {'{ Progress }'} from 'pigui'"
                 description="A determinate progress bar in every status color and size."
             >
-                <Demo inner="flex flex-col gap-3 w-64">
-                    <Progress value={40} label="Progress" />
-
-                    {#each STATUSES as status (status)}
-                        <Progress value={40} {status} />
-                    {/each}
+                <Demo inner="flex flex-col gap-3 w-64" code={progressCode}>
+                    <ProgressDemo />
                 </Demo>
             </Section>
 
@@ -450,23 +330,8 @@
                 source="import {'{ Input }'} from 'pigui'"
                 description="Text, number (with decimals and separators), and password fields."
             >
-                <Demo inner="flex flex-col gap-3 w-64">
-                    <Input
-                        placeholder="Type something…"
-                        bind:value={inputText}
-                    />
-
-                    <Input
-                        type="number"
-                        decimals={2}
-                        bind:value={inputNumber}
-                    />
-
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                        bind:value={inputPassword}
-                    />
+                <Demo inner="flex flex-col gap-3 w-64" code={inputCode}>
+                    <InputDemo />
                 </Demo>
             </Section>
 
@@ -474,10 +339,10 @@
                 id="select"
                 title="Select"
                 source="import {'{ Select }'} from 'pigui'"
-                description="A native select styled with the token palette. Value: {selectValue}."
+                description="A native select styled with the token palette."
             >
-                <Demo>
-                    <Select options={selectOptions} bind:value={selectValue} />
+                <Demo code={selectCode}>
+                    <SelectDemo />
                 </Demo>
             </Section>
 
@@ -487,19 +352,8 @@
                 source="import {'{ Card }'} from 'pigui'"
                 description="Wraps arbitrary content in a themed surface with a border and rounded corners."
             >
-                <Demo>
-                    <div class="w-80">
-                        <Card>
-                            <div class="flex flex-col gap-2">
-                                <div class="font-bold">Card title</div>
-
-                                <p>
-                                    Cards wrap arbitrary content in a themed
-                                    surface with a border and rounded corners.
-                                </p>
-                            </div>
-                        </Card>
-                    </div>
+                <Demo code={cardCode}>
+                    <CardDemo />
                 </Demo>
             </Section>
 
@@ -509,14 +363,8 @@
                 source="import {'{ ButtonGroup }'} from 'pigui'"
                 description="Segments a set of related buttons into a single bordered control."
             >
-                <Demo>
-                    <ButtonGroup label="Alignment">
-                        <Button size="md" label="Left" />
-
-                        <Button size="md" label="Center" active />
-
-                        <Button size="md" label="Right" />
-                    </ButtonGroup>
+                <Demo code={buttonGroupCode}>
+                    <ButtonGroupDemo />
                 </Demo>
             </Section>
 
@@ -526,17 +374,8 @@
                 source="import {'{ CopyButton }'} from 'pigui'"
                 description="A button that runs a copy action and flips to a checkmark for feedback."
             >
-                <Demo>
-                    <CopyButton
-                        label="Copy"
-                        action={() => navigator.clipboard.writeText("pigui")}
-                    />
-
-                    <CopyButton
-                        round
-                        title="Copy to clipboard"
-                        action={() => navigator.clipboard.writeText("pigui")}
-                    />
+                <Demo code={copyButtonCode}>
+                    <CopyButtonDemo />
                 </Demo>
             </Section>
 
@@ -546,22 +385,8 @@
                 source="import {'{ Alert }'} from 'pigui'"
                 description="Inline status messages, optionally dismissible via onClose."
             >
-                <Demo inner="flex flex-col gap-3 w-full">
-                    <Alert status="info" title="Heads up">
-                        This is an informational message.
-                    </Alert>
-
-                    <Alert status="success" title="Saved">
-                        Your changes have been saved.
-                    </Alert>
-
-                    <Alert status="warning" title="Careful">
-                        This action may have side effects.
-                    </Alert>
-
-                    <Alert status="danger" title="Error" onClose={() => {}}>
-                        Something went wrong — this alert can be dismissed.
-                    </Alert>
+                <Demo inner="flex flex-col gap-3 w-full" code={alertCode}>
+                    <AlertDemo />
                 </Demo>
             </Section>
 
@@ -571,14 +396,8 @@
                 source="import {'{ Tooltip }'} from 'pigui'"
                 description="Hover or focus a target to reveal a positioned tooltip."
             >
-                <Demo>
-                    <Tooltip text="More information">
-                        <Button size="md" label="Hover me" />
-                    </Tooltip>
-
-                    <Tooltip text="To the right" placement="right" delay={0}>
-                        <Button size="md" label="Hover me" />
-                    </Tooltip>
+                <Demo code={tooltipCode}>
+                    <TooltipDemo />
                 </Demo>
             </Section>
 
@@ -586,14 +405,10 @@
                 id="tabbar"
                 title="Tabbar"
                 source="import {'{ Tabbar }'} from 'pigui'"
-                description="A segmented tab control. Bound value: {tab}."
+                description="A segmented tab control that binds to the selected value."
             >
-                <Demo>
-                    <Tabbar
-                        items={tabItems}
-                        bind:value={tab}
-                        label="Sections"
-                    />
+                <Demo code={tabbarCode}>
+                    <TabbarDemo />
                 </Demo>
             </Section>
 
@@ -603,10 +418,11 @@
                 source="import {'{ Breadcrumbs }'} from 'pigui'"
                 description="A trail of links with a configurable separator."
             >
-                <Demo inner="flex flex-col gap-3 items-start">
-                    <Breadcrumbs items={breadcrumbItems} />
-
-                    <Breadcrumbs items={breadcrumbItems} separator="›" />
+                <Demo
+                    inner="flex flex-col gap-3 items-start"
+                    code={breadcrumbsCode}
+                >
+                    <BreadcrumbsDemo />
                 </Demo>
             </Section>
 
@@ -614,10 +430,10 @@
                 id="pagination"
                 title="Pagination"
                 source="import {'{ Pagination }'} from 'pigui'"
-                description="Page controls with a customizable label. Current page: {page}."
+                description="Page controls with a customizable label."
             >
-                <Demo>
-                    <Pagination pages={10} bind:page />
+                <Demo code={paginationCode}>
+                    <PaginationDemo />
                 </Demo>
             </Section>
 
@@ -627,23 +443,8 @@
                 source="import {'{ Modal }'} from 'pigui'"
                 description="A general-purpose overlay with a built-in close button and backdrop dismiss."
             >
-                <Demo>
-                    <Button
-                        variant="primary"
-                        size="md"
-                        label="Open modal"
-                        action={() => (modalOpen = true)}
-                    />
-                    <Modal open={modalOpen} onClose={() => (modalOpen = false)}>
-                        <div class="flex w-96 max-w-full flex-col gap-2 p-6">
-                            <div class="font-bold">Modal title</div>
-
-                            <p>
-                                Any content can go here. The close button in the
-                                corner and the backdrop click are built in.
-                            </p>
-                        </div>
-                    </Modal>
+                <Demo code={modalCode}>
+                    <ModalDemo />
                 </Demo>
             </Section>
 
@@ -653,26 +454,8 @@
                 source="import {'{ Dialog }'} from 'pigui'"
                 description="A focused confirm/cancel prompt for destructive actions."
             >
-                <Demo>
-                    <Button
-                        variant="primary"
-                        size="md"
-                        label="Delete row"
-                        action={() => (dialogOpen = true)}
-                    />
-
-                    <Dialog
-                        open={dialogOpen}
-                        title="Delete row?"
-                        message="This action cannot be undone."
-                        confirmLabel="Delete"
-                        cancelLabel="Keep it"
-                        onConfirm={() => {
-                            dialogOpen = false;
-                            showToast("Row deleted", { status: "danger" });
-                        }}
-                        onCancel={() => (dialogOpen = false)}
-                    />
+                <Demo code={dialogCode}>
+                    <DialogDemo />
                 </Demo>
             </Section>
 
@@ -682,18 +465,8 @@
                 source="import {'{ Popover }'} from 'pigui'"
                 description="Arbitrary content anchored to a trigger, dismissed on outside click or Escape."
             >
-                <Demo>
-                    <Popover>
-                        {#snippet trigger()}
-                            <Button size="md" label="Open popover" />
-                        {/snippet}
-
-                        <div class="flex max-w-60 flex-col gap-1">
-                            <div class="font-bold">Popover</div>
-
-                            <p>Click outside or press Escape to dismiss.</p>
-                        </div>
-                    </Popover>
+                <Demo code={popoverCode}>
+                    <PopoverDemo />
                 </Demo>
             </Section>
 
@@ -703,22 +476,8 @@
                 source="import {'{ Dropdown }'} from 'pigui'"
                 description="A menu of actions anchored to a trigger, with disabled items and placement control."
             >
-                <Demo>
-                    <Dropdown items={dropdownItems} label="Actions">
-                        {#snippet trigger()}
-                            <Button size="md" label="Actions" />
-                        {/snippet}
-                    </Dropdown>
-
-                    <Dropdown
-                        items={dropdownItems}
-                        label="Actions"
-                        placement="top-start"
-                    >
-                        {#snippet trigger()}
-                            <Button size="md" label="Open upward" />
-                        {/snippet}
-                    </Dropdown>
+                <Demo code={dropdownCode}>
+                    <DropdownDemo />
                 </Demo>
             </Section>
 
@@ -728,26 +487,8 @@
                 source="import {'{ Floating }'} from 'pigui'"
                 description="The positioning primitive behind Dropdown/Popover — anchor any content with the native popover API."
             >
-                <Demo>
-                    <div bind:this={floatingAnchor} class="inline-flex h-10">
-                        <Button
-                            label={floatingOpen ? "Hide" : "Show"}
-                            action={() => (floatingOpen = !floatingOpen)}
-                        />
-                    </div>
-
-                    <Floating
-                        anchor={floatingAnchor}
-                        open={floatingOpen}
-                        placement="bottom"
-                        onClose={() => (floatingOpen = false)}
-                    >
-                        <div
-                            class="rounded-lg border border-border bg-surface-raised p-3 shadow-md"
-                        >
-                            Anchored to the button with the native popover API.
-                        </div>
-                    </Floating>
+                <Demo code={floatingCode}>
+                    <FloatingDemo />
                 </Demo>
             </Section>
 
@@ -757,20 +498,8 @@
                 source="import {'{ Navbar }'} from 'pigui'"
                 description="A responsive top bar with brand, nav, and actions snippets — it powers the header of this page."
             >
-                <Demo inner="block w-full">
-                    <Navbar>
-                        {#snippet brand()}
-                            <span class="text-lg font-bold">PigUI</span>
-                        {/snippet}
-
-                        {#snippet nav()}
-                            <Tabbar items={tabItems} value="home" />
-                        {/snippet}
-
-                        {#snippet actions()}
-                            <Button size="md" label="Sign in" />
-                        {/snippet}
-                    </Navbar>
+                <Demo inner="block w-full" code={navbarCode}>
+                    <NavbarDemo />
                 </Demo>
             </Section>
 
@@ -780,18 +509,8 @@
                 source="import {'{ showToast, ToastContainer }'} from 'pigui'"
                 description="Fire transient notifications from anywhere with showToast(). Render one ToastContainer at the app root."
             >
-                <Demo>
-                    {#each STATUSES as status (status)}
-                        <Button
-                            size="md"
-                            label={status}
-                            action={() =>
-                                showToast(`This is a ${status} toast.`, {
-                                    status,
-                                    title: status,
-                                })}
-                        />
-                    {/each}
+                <Demo code={toastCode}>
+                    <ToastDemo />
                 </Demo>
             </Section>
 
@@ -799,14 +518,10 @@
                 id="search-select"
                 title="SearchSelect"
                 source="import {'{ SearchSelect }'} from 'pigui'"
-                description="A filterable combobox. Value: {fruit ?? '—'}."
+                description="A filterable combobox."
             >
-                <Demo inner="block w-64">
-                    <SearchSelect
-                        options={fruitOptions}
-                        placeholder="Search fruit…"
-                        bind:value={fruit}
-                    />
+                <Demo inner="block w-64" code={searchSelectCode}>
+                    <SearchSelectDemo />
                 </Demo>
             </Section>
 
@@ -814,10 +529,10 @@
                 id="date-selector"
                 title="DateSelector"
                 source="import {'{ DateSelector }'} from 'pigui'"
-                description="An inline calendar for choosing a date. Value: {dateSelValue}."
+                description="An inline calendar for choosing a date."
             >
-                <Demo>
-                    <DateSelector bind:value={dateSelValue} />
+                <Demo code={dateSelectorCode}>
+                    <DateSelectorDemo />
                 </Demo>
             </Section>
 
@@ -825,10 +540,10 @@
                 id="time-selector"
                 title="TimeSelector"
                 source="import {'{ TimeSelector }'} from 'pigui'"
-                description="An inline stepped time list. Value: {timeSelValue}."
+                description="An inline stepped time list."
             >
-                <Demo>
-                    <TimeSelector bind:value={timeSelValue} step={30} />
+                <Demo code={timeSelectorCode}>
+                    <TimeSelectorDemo />
                 </Demo>
             </Section>
 
@@ -836,10 +551,10 @@
                 id="date-picker"
                 title="DatePicker"
                 source="import {'{ DatePicker }'} from 'pigui'"
-                description="A text field with a calendar popover. Value: {dateValue}."
+                description="A text field with a calendar popover."
             >
-                <Demo inner="block w-48">
-                    <DatePicker bind:value={dateValue} />
+                <Demo inner="block w-48" code={datePickerCode}>
+                    <DatePickerDemo />
                 </Demo>
             </Section>
 
@@ -847,10 +562,10 @@
                 id="time-picker"
                 title="TimePicker"
                 source="import {'{ TimePicker }'} from 'pigui'"
-                description="A time field with a stepped dropdown. Value: {timeValue}."
+                description="A time field with a stepped dropdown."
             >
-                <Demo inner="block w-28">
-                    <TimePicker bind:value={timeValue} minuteStep={15} />
+                <Demo inner="block w-28" code={timePickerCode}>
+                    <TimePickerDemo />
                 </Demo>
             </Section>
 
@@ -860,8 +575,8 @@
                 source="import {'{ Accordion }'} from 'pigui'"
                 description="Collapsible sections, optionally exclusive so only one stays open."
             >
-                <Demo inner="block w-full max-w-xl">
-                    <Accordion items={accordionItems} exclusive />
+                <Demo inner="block w-full max-w-xl" code={accordionCode}>
+                    <AccordionDemo />
                 </Demo>
             </Section>
 
@@ -871,34 +586,32 @@
                 source="import {'{ Table }'} from 'pigui'"
                 description="A sortable data table with optional filtering, foldable columns, editing, and a summary row."
             >
-                <Demo label="Plain" inner="block w-full">
-                    <Table columns={plainColumns} {rows} />
+                <Demo label="Plain" inner="block w-full" code={tablePlainCode}>
+                    <TablePlainDemo />
                 </Demo>
 
-                <Demo label="Filterable" inner="block w-full">
-                    <Table columns={plainColumns} {rows} filterable />
+                <Demo
+                    label="Filterable"
+                    inner="block w-full"
+                    code={tableFilterableCode}
+                >
+                    <TableFilterableDemo />
                 </Demo>
 
-                <Demo label="Foldable" inner="block w-full">
-                    <Table
-                        columns={foldableColumns}
-                        {rows}
-                        bind:folded={tableFolded}
-                    />
+                <Demo
+                    label="Foldable"
+                    inner="block w-full"
+                    code={tableFoldableCode}
+                >
+                    <TableFoldableDemo />
                 </Demo>
 
-                <Demo label="Editable" inner="block w-full">
-                    <Table
-                        {columns}
-                        {rows}
-                        summary={{ name: "Total", age: totalAge }}
-                        onEdit={(row, key, value) =>
-                            Object.assign(row, { [key]: value })}
-                        onDelete={(row) =>
-                            (rows = rows.filter(
-                                (other) => other.id !== row.id,
-                            ))}
-                    />
+                <Demo
+                    label="Editable"
+                    inner="block w-full"
+                    code={tableEditableCode}
+                >
+                    <TableEditableDemo />
                 </Demo>
             </Section>
 
