@@ -26,6 +26,7 @@ export { default as Breadcrumbs } from "./Breadcrumbs.svelte";
 export { default as Button } from "./Button.svelte";
 export { default as ButtonGroup } from "./ButtonGroup.svelte";
 export { default as Card } from "./Card.svelte";
+export { default as Checkbox } from "./Checkbox.svelte";
 export { default as CopyButton } from "./CopyButton.svelte";
 export { default as DatePicker } from "./DatePicker.svelte";
 export { default as DateSelector } from "./DateSelector.svelte";

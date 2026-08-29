@@ -33,6 +33,8 @@
     import buttonGroupCode from "$lib/demos/button-group.svelte?raw";
     import CopyButtonDemo from "$lib/demos/copy-button.svelte";
     import copyButtonCode from "$lib/demos/copy-button.svelte?raw";
+    import CheckboxDemo from "$lib/demos/checkbox.svelte";
+    import checkboxCode from "$lib/demos/checkbox.svelte?raw";
     import AlertDemo from "$lib/demos/alert.svelte";
     import alertCode from "$lib/demos/alert.svelte?raw";
     import TooltipDemo from "$lib/demos/tooltip.svelte";
@@ -77,6 +79,8 @@
     import tableFoldableCode from "$lib/demos/table-foldable.svelte?raw";
     import TableEditableDemo from "$lib/demos/table-editable.svelte";
     import tableEditableCode from "$lib/demos/table-editable.svelte?raw";
+    import TableSelectableDemo from "$lib/demos/table-selectable.svelte";
+    import tableSelectableCode from "$lib/demos/table-selectable.svelte?raw";
 
     const REPO = "https://github.com/fatpeppapig/pigui";
 
@@ -86,6 +90,7 @@
             items: [
                 { id: "button", name: "Button" },
                 { id: "badge", name: "Badge" },
+                { id: "checkbox", name: "Checkbox" },
                 { id: "loader", name: "Loader" },
                 { id: "progress", name: "Progress" },
                 { id: "input", name: "Input" },
@@ -380,6 +385,17 @@
             </Section>
 
             <Section
+                id="checkbox"
+                title="Checkbox"
+                source="import {'{ Checkbox }'} from 'pigui'"
+                description="A checkbox that allows user to toggle an option."
+            >
+                <Demo code={checkboxCode}>
+                    <CheckboxDemo />
+                </Demo>
+            </Section>
+
+            <Section
                 id="alert"
                 title="Alert"
                 source="import {'{ Alert }'} from 'pigui'"
@@ -612,6 +628,14 @@
                     code={tableEditableCode}
                 >
                     <TableEditableDemo />
+                </Demo>
+
+                <Demo
+                    label="Selectable"
+                    inner="block w-full"
+                    code={tableSelectableCode}
+                >
+                    <TableSelectableDemo />
                 </Demo>
             </Section>
 

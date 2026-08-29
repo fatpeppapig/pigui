@@ -6,6 +6,7 @@
     import IconTrash from "@tabler/icons-svelte/icons/trash";
 
     import Button from "../Button.svelte";
+    import Checkbox from "../Checkbox.svelte";
     import Dialog from "../Dialog.svelte";
     import Input from "../Input.svelte";
     import Pagination from "../Pagination.svelte";
@@ -37,6 +38,8 @@
         labels?: Partial<TableLabels>;
         folded?: boolean;
         filterable?: boolean;
+        selectable?: boolean;
+        selected?: T["id"][];
         onEdit?: (
             row: T,
             key: keyof T & string,
@@ -58,6 +61,8 @@
         labels,
         folded = $bindable(false),
         filterable = false,
+        selectable = false,
+        selected = $bindable([]),
         onEdit,
         onDelete,
         onRowClick,
@@ -67,6 +72,7 @@
         filter: "Filter",
         toggleFilters: "toggle filters",
         toggleFoldedColumns: "toggle folded columns",
+        select: "select row",
         delete: "delete",
         deleteConfirm: "Delete",
         deleteTitle: "Delete Row?",
@@ -262,10 +268,14 @@
     <div class="flex overflow-x-auto rounded-xl border border-border">
         <table
             class="w-full table-fixed border-collapse [&>tbody>tr:last-child>td]:border-b-0"
-            style:min-width={`${visibleColumns.length * 6 + (hasActionsColumn ? 2 : 0)}rem`}
+            style:min-width={`${visibleColumns.length * 6 + (hasActionsColumn ? 2 : 0) + (selectable ? 2 : 0)}rem`}
         >
             <thead>
                 <tr>
+                    {#if selectable}
+                        <th class={[headClass, "p-0 w-8"]}></th>
+                    {/if}
+
                     {#each visibleColumns as column (column.key)}
                         <th
                             class={[
@@ -352,6 +362,10 @@
 
                 {#if filterable && filtersVisible}
                     <tr>
+                        {#if selectable}
+                            <th class={[headClass, "p-0 w-8"]}></th>
+                        {/if}
+
                         {#each visibleColumns as column (column.key)}
                             <th class={[headClass, "p-1 font-normal"]}>
                                 <Input
@@ -374,6 +388,23 @@
             <tbody>
                 {#each paged as row, index (row.id)}
                     <tr class={rowClass(index)}>
+                        {#if selectable}
+                            <td class={[cellClass, "p-1 text-center"]}>
+                                <Checkbox
+                                    title={effectiveLabels.select}
+                                    bind:checked={
+                                        () => selected.includes(row.id),
+                                        (checked) =>
+                                            (selected = checked
+                                                ? [...selected, row.id]
+                                                : selected.filter(
+                                                      (id) => id !== row.id,
+                                                  ))
+                                    }
+                                />
+                            </td>
+                        {/if}
+
                         {#each visibleColumns as column (column.key)}
                             {#if editing?.id === row.id && editing.key === column.key}
                                 <td class={[cellClass, "p-1"]}>
@@ -452,7 +483,8 @@
                         <td
                             class={[bodyClass, "px-2 py-1 text-center"]}
                             colspan={visibleColumns.length +
-                                (hasActionsColumn ? 1 : 0)}
+                                (hasActionsColumn ? 1 : 0) +
+                                (selectable ? 1 : 0)}
                         >
                             {effectiveLabels.noRows}
                         </td>
@@ -463,6 +495,10 @@
             {#if summary}
                 <tfoot>
                     <tr class={rowClass(paged.length)}>
+                        {#if selectable}
+                            <td class={summaryClass}></td>
+                        {/if}
+
                         {#each visibleColumns as column (column.key)}
                             <td
                                 class={[

@@ -11,6 +11,7 @@ export type TableLabels = {
     filter: string;
     toggleFilters: string;
     toggleFoldedColumns: string;
+    select: string;
     delete: string;
     deleteConfirm: string;
     deleteTitle: string;
