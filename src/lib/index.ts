@@ -40,6 +40,7 @@ export { default as Navbar } from "./Navbar.svelte";
 export { default as Pagination } from "./Pagination.svelte";
 export { default as Popover } from "./Popover.svelte";
 export { default as Progress } from "./Progress.svelte";
+export { default as RichText } from "./RichText.svelte";
 export { default as SearchSelect } from "./SearchSelect.svelte";
 export { default as Select } from "./Select.svelte";
 export { default as Tabbar } from "./Tabbar.svelte";

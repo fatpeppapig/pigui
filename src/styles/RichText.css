@@ -1,0 +1,159 @@
+.pigui-prose {
+    color: var(--color-foreground);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    overflow-wrap: break-word;
+}
+
+.pigui-prose:focus {
+    outline: none;
+}
+
+.pigui-prose > :first-child {
+    margin-top: 0;
+}
+
+.pigui-prose > :last-child {
+    margin-bottom: 0;
+}
+
+.pigui-prose p,
+.pigui-prose ul,
+.pigui-prose ol,
+.pigui-prose blockquote,
+.pigui-prose pre,
+.pigui-prose table {
+    margin: 0.75em 0;
+}
+
+.pigui-prose h1,
+.pigui-prose h2,
+.pigui-prose h3,
+.pigui-prose h4,
+.pigui-prose h5,
+.pigui-prose h6 {
+    margin: 1.25em 0 0.5em;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.pigui-prose h1 {
+    font-size: 1.75em;
+}
+
+.pigui-prose h2 {
+    font-size: 1.4em;
+}
+
+.pigui-prose h3 {
+    font-size: 1.2em;
+}
+
+.pigui-prose h4,
+.pigui-prose h5,
+.pigui-prose h6 {
+    font-size: 1em;
+}
+
+.pigui-prose ul,
+.pigui-prose ol {
+    padding-left: 1.5em;
+}
+
+.pigui-prose ul {
+    list-style: disc;
+}
+
+.pigui-prose ol {
+    list-style: decimal;
+}
+
+.pigui-prose li {
+    margin: 0.25em 0;
+}
+
+.pigui-prose li > ul,
+.pigui-prose li > ol {
+    margin: 0.25em 0;
+}
+
+.pigui-prose li > p {
+    margin: 0;
+}
+
+.pigui-prose a {
+    color: var(--color-info);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.pigui-prose strong {
+    font-weight: 700;
+}
+
+.pigui-prose em {
+    font-style: italic;
+}
+
+.pigui-prose s {
+    text-decoration: line-through;
+}
+
+.pigui-prose code {
+    padding: 0.15em 0.35em;
+    border-radius: 0.25rem;
+    background-color: var(--color-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+}
+
+.pigui-prose pre {
+    padding: 0.75em 1em;
+    border-radius: 0.5rem;
+    background-color: var(--color-muted);
+    overflow-x: auto;
+}
+
+.pigui-prose pre code {
+    padding: 0;
+    background-color: transparent;
+}
+
+.pigui-prose blockquote {
+    padding-left: 1em;
+    border-left: 3px solid var(--color-border);
+    color: var(--color-muted-foreground);
+}
+
+.pigui-prose hr {
+    margin: 1.5em 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.pigui-prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.pigui-prose table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pigui-prose th,
+.pigui-prose td {
+    padding: 0.4em 0.6em;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+.pigui-prose th {
+    background-color: var(--color-secondary);
+    font-weight: 700;
+}
+
+.pigui-prose .ProseMirror-selectednode {
+    outline: 2px solid var(--color-accent);
+}

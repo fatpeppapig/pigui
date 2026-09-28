@@ -81,6 +81,12 @@
     import tableEditableCode from "$lib/demos/table-editable.svelte?raw";
     import TableSelectableDemo from "$lib/demos/table-selectable.svelte";
     import tableSelectableCode from "$lib/demos/table-selectable.svelte?raw";
+    import RichTextDemo from "$lib/demos/rich-text.svelte";
+    import richTextCode from "$lib/demos/rich-text.svelte?raw";
+    import RichEditorDemo from "$lib/demos/rich-editor.svelte";
+    import richEditorCode from "$lib/demos/rich-editor.svelte?raw";
+    import RichEditorToolsDemo from "$lib/demos/rich-editor-tools.svelte";
+    import richEditorToolsCode from "$lib/demos/rich-editor-tools.svelte?raw";
 
     const REPO = "https://github.com/fatpeppapig/pigui";
 
@@ -126,6 +132,8 @@
                 { id: "date-picker", name: "DatePicker" },
                 { id: "time-picker", name: "TimePicker" },
                 { id: "accordion", name: "Accordion" },
+                { id: "rich-text", name: "RichText" },
+                { id: "rich-editor", name: "RichEditor" },
                 { id: "table", name: "Table" },
             ],
         },
@@ -593,6 +601,40 @@
             >
                 <Demo inner="block w-full max-w-xl" code={accordionCode}>
                     <AccordionDemo />
+                </Demo>
+            </Section>
+
+            <Section
+                id="rich-text"
+                title="RichText"
+                source="import {'{ RichText }'} from 'pigui'"
+                description="Renders untrusted HTML through DOMPurify, styled by the token palette instead of a typography plugin."
+            >
+                <Demo inner="block w-full" code={richTextCode}>
+                    <RichTextDemo />
+                </Demo>
+            </Section>
+
+            <Section
+                id="rich-editor"
+                title="RichEditor"
+                source="import {'{ RichEditor }'} from 'pigui/editor'"
+                description="A Tiptap editor with a PigUI toolbar. Shipped from the pigui/editor subpath, so Tiptap stays optional for everyone else."
+            >
+                <Demo
+                    label="Default"
+                    inner="block w-full"
+                    code={richEditorCode}
+                >
+                    <RichEditorDemo />
+                </Demo>
+
+                <Demo
+                    label="Custom toolbar"
+                    inner="block w-full"
+                    code={richEditorToolsCode}
+                >
+                    <RichEditorToolsDemo />
                 </Demo>
             </Section>
 
