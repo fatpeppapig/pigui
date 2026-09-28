@@ -4,6 +4,8 @@ import { render } from "@testing-library/svelte";
 
 import RichEditor from "../lib/editor/RichEditor.svelte";
 
+import BoundEditor from "./fixtures/BoundEditor.svelte";
+
 describe("RichEditor", () => {
     it("renders the default toolbar", async () => {
         const { getByTitle } = render(RichEditor);
@@ -64,6 +66,44 @@ describe("RichEditor", () => {
 
         expect(container.textContent).toContain("two");
         expect(container.textContent).not.toContain("one");
+    });
+
+    it("leaves the bound value untouched when only mounted", async () => {
+        const table = [
+            "| Mode | Left |",
+            "| --- | --- |",
+            "| Write | editor |",
+        ].join("\n");
+
+        const seen: string[] = [];
+
+        render(BoundEditor, { value: table, report: (v) => seen.push(v) });
+
+        await tick();
+
+        expect(seen.at(-1)).toBe(table);
+    });
+
+    it("keeps tables, task lists and images in the document", async () => {
+        const { container } = render(RichEditor, {
+            value: [
+                "| A | B |",
+                "| --- | --- |",
+                "| 1 | 2 |",
+                "",
+                "- [ ] todo",
+                "",
+                "![alt](https://example.com/a.png)",
+            ].join("\n"),
+        });
+
+        await tick();
+
+        expect(container.querySelector("table")).toBeTruthy();
+        expect(container.querySelector("input[type='checkbox']")).toBeTruthy();
+        expect(container.querySelector("img")?.getAttribute("src")).toBe(
+            "https://example.com/a.png",
+        );
     });
 
     it("does not commit content that was never edited", async () => {

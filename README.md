@@ -101,7 +101,8 @@ entry point so Tiptap stays out of the main bundle — and out of `npm install` 
 for anyone who does not use it:
 
 ```sh
-npm install @tiptap/core @tiptap/pm @tiptap/starter-kit @tiptap/markdown
+npm install @tiptap/core @tiptap/pm @tiptap/starter-kit @tiptap/markdown \
+    @tiptap/extension-table @tiptap/extension-list @tiptap/extension-image
 ```
 
 ```svelte
@@ -128,15 +129,19 @@ toolbar — an array of groups, each rendered as a `ButtonGroup`:
 ```
 
 Available tools: `h1`, `h2`, `h3`, `bold`, `italic`, `underline`, `strike`,
-`code`, `bulletList`, `orderedList`, `blockquote`, `horizontalRule`, `undo`,
-`redo`. Pass `extensions` to add Tiptap extensions beyond `StarterKit`.
+`code`, `bulletList`, `orderedList`, `taskList`, `table`, `blockquote`,
+`horizontalRule`, `undo`, `redo`. Pass `extensions` to add Tiptap extensions
+beyond the built-in schema.
 
-Two things to know about the round trip. Anything outside the editor's schema
-is dropped when content loads, and the editor rewrites `value` into its own
-canonical Markdown on load — a reformat, not an edit, so it does not trigger
-`onCommit`. And `underline` is not Markdown: Tiptap serializes it as
-`++text++`, which `RichText` prints literally, so it is not in the default
-toolbar.
+Two things to know about the round trip. Loading content never writes back to
+`value` — the editor holds its own canonical Markdown and only assigns on a
+real document change, so mounting the editor cannot alter the document behind
+you. The schema covers what `RichText` renders, GFM tables, task lists and
+images included; anything beyond it is still dropped the moment an edit
+serializes, so register it through `extensions` if you need it.
+
+And `underline` is not Markdown: Tiptap serializes it as `++text++`, which
+`RichText` prints literally, so it is not in the default toolbar.
 
 ## Development
 

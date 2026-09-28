@@ -2,6 +2,9 @@
     import { onDestroy, onMount } from "svelte";
 
     import { Editor, type Extensions } from "@tiptap/core";
+    import { Image } from "@tiptap/extension-image";
+    import { TaskItem, TaskList } from "@tiptap/extension-list";
+    import { TableKit } from "@tiptap/extension-table";
     import { Markdown } from "@tiptap/markdown";
     import StarterKit from "@tiptap/starter-kit";
 
@@ -13,6 +16,15 @@
     import { normalizeMarkdown } from "../utils/markdown";
 
     import { DEFAULT_TOOLS, editorTools, type EditorTool } from "./tools";
+
+    const MARKDOWN_EXTENSIONS = [
+        StarterKit,
+        Markdown,
+        TableKit,
+        TaskList,
+        TaskItem,
+        Image,
+    ];
 
     type Props = {
         value?: string;
@@ -38,6 +50,7 @@
     let editor = $state<Editor | null>(null);
     let revision = $state(0);
     let committed = value;
+    let synced = value;
 
     const read = (instance: Editor) =>
         normalizeMarkdown(instance.getMarkdown());
@@ -53,23 +66,26 @@
         editor = new Editor({
             element,
             editable,
-            extensions: [StarterKit, Markdown, ...extensions],
+            extensions: [...MARKDOWN_EXTENSIONS, ...extensions],
             content: value,
             contentType: "markdown",
             editorProps: {
                 attributes: { class: "pigui-prose h-full px-3 py-2" },
             },
-            onTransaction: ({ editor: instance }) => {
+            onTransaction: () => {
                 revision++;
+            },
+            onUpdate: ({ editor: instance, transaction }) => {
+                if (!transaction.docChanged) return;
 
                 const markdown = read(instance);
+
+                synced = markdown;
 
                 if (markdown !== value) value = markdown;
             },
             onBlur: commit,
         });
-
-        committed = read(editor);
     });
 
     onDestroy(() => {
@@ -78,7 +94,10 @@
     });
 
     $effect(() => {
-        if (!editor || read(editor) === value) return;
+        if (!editor || value === synced) return;
+
+        synced = value;
+        committed = value;
 
         editor.commands.setContent(value, {
             contentType: "markdown",
@@ -87,7 +106,7 @@
     });
 
     $effect(() => {
-        editor?.setEditable(editable);
+        editor?.setEditable(editable, false);
     });
 
     const isActive = (tool: EditorTool) => {

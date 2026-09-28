@@ -10,10 +10,12 @@ import IconH2 from "@tabler/icons-svelte/icons/h-2";
 import IconH3 from "@tabler/icons-svelte/icons/h-3";
 import IconItalic from "@tabler/icons-svelte/icons/italic";
 import IconList from "@tabler/icons-svelte/icons/list";
+import IconListCheck from "@tabler/icons-svelte/icons/list-check";
 import IconListNumbers from "@tabler/icons-svelte/icons/list-numbers";
 import IconRedo from "@tabler/icons-svelte/icons/arrow-forward-up";
 import IconRule from "@tabler/icons-svelte/icons/minus";
 import IconStrikethrough from "@tabler/icons-svelte/icons/strikethrough";
+import IconTable from "@tabler/icons-svelte/icons/table";
 import IconUnderline from "@tabler/icons-svelte/icons/underline";
 import IconUndo from "@tabler/icons-svelte/icons/arrow-back-up";
 
@@ -28,6 +30,8 @@ export type EditorTool =
     | "code"
     | "bulletList"
     | "orderedList"
+    | "taskList"
+    | "table"
     | "blockquote"
     | "horizontalRule"
     | "undo"
@@ -94,6 +98,23 @@ export const editorTools: Record<EditorTool, ToolDefinition> = {
         title: "ordered list",
         isActive: (editor) => editor.isActive("orderedList"),
         run: (editor) => editor.chain().focus().toggleOrderedList().run(),
+    },
+    taskList: {
+        icon: IconListCheck,
+        title: "task list",
+        isActive: (editor) => editor.isActive("taskList"),
+        run: (editor) => editor.chain().focus().toggleTaskList().run(),
+    },
+    table: {
+        icon: IconTable,
+        title: "table",
+        isActive: (editor) => editor.isActive("table"),
+        run: (editor) =>
+            editor
+                .chain()
+                .focus()
+                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                .run(),
     },
     blockquote: {
         icon: IconBlockquote,
