@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { tick } from "svelte";
 import { render } from "@testing-library/svelte";
 
@@ -16,7 +16,7 @@ describe("RichEditor", () => {
             "heading 3",
             "bold",
             "italic",
-            "underline",
+            "strikethrough",
             "bullet list",
             "ordered list",
         ]) {
@@ -44,28 +44,38 @@ describe("RichEditor", () => {
         expect(queryByTitle("bold")).toBeNull();
     });
 
-    it("adopts content replaced from the outside", async () => {
-        const { container, rerender } = render(RichEditor, {
-            value: "<p>one</p>",
+    it("loads markdown into the document", async () => {
+        const { container } = render(RichEditor, {
+            value: "## Notes\n\n- one\n- two",
         });
 
         await tick();
-        await rerender({ value: "<p>two</p>" });
+
+        expect(container.querySelector("h2")?.textContent).toBe("Notes");
+        expect(container.querySelectorAll("li")).toHaveLength(2);
+    });
+
+    it("adopts content replaced from the outside", async () => {
+        const { container, rerender } = render(RichEditor, { value: "one" });
+
+        await tick();
+        await rerender({ value: "two" });
         await tick();
 
         expect(container.textContent).toContain("two");
         expect(container.textContent).not.toContain("one");
     });
 
-    it("loads sanitized content into the document", async () => {
-        const { container } = render(RichEditor, {
-            value: `<p>safe</p><script>alert(1)</script>`,
+    it("does not commit content that was never edited", async () => {
+        const onCommit = vi.fn();
+        const { unmount } = render(RichEditor, {
+            value: "## Notes",
+            onCommit,
         });
 
         await tick();
+        unmount();
 
-        expect(container.querySelector(".pigui-prose")).toBeTruthy();
-        expect(container.querySelector("script")).toBeNull();
-        expect(container.textContent).toContain("safe");
+        expect(onCommit).not.toHaveBeenCalled();
     });
 });

@@ -5,20 +5,20 @@ import { render } from "@testing-library/svelte";
 import RichText from "../lib/RichText.svelte";
 
 describe("RichText", () => {
-    it("renders sanitized markup", async () => {
+    it("renders markdown", async () => {
         const { container } = render(RichText, {
-            value: "<h1>Recipe</h1><ul><li>Salt</li></ul>",
+            value: "## Recipe\n\n- Salt\n- **Pepper**",
         });
 
         await tick();
 
-        expect(container.querySelector("h1")?.textContent).toBe("Recipe");
-        expect(container.querySelector("li")?.textContent).toBe("Salt");
+        expect(container.querySelector("h2")?.textContent).toBe("Recipe");
+        expect(container.querySelector("strong")?.textContent).toBe("Pepper");
     });
 
     it("strips dangerous markup", async () => {
         const { container } = render(RichText, {
-            value: `<p>safe</p><script>alert(1)</script><img src="x" onerror="alert(1)">`,
+            value: `Safe\n\n<script>alert(1)</script>\n\n<img src="x" onerror="alert(1)">`,
         });
 
         await tick();
@@ -27,12 +27,12 @@ describe("RichText", () => {
         expect(container.querySelector("img")?.getAttribute("onerror")).toBe(
             null,
         );
-        expect(container.textContent).toContain("safe");
+        expect(container.textContent).toContain("Safe");
     });
 
     it("applies the prose class and extra classes", () => {
         const { container } = render(RichText, {
-            value: "<p>text</p>",
+            value: "text",
             class: "max-w-prose",
         });
 

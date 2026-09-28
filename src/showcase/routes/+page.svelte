@@ -608,7 +608,7 @@
                 id="rich-text"
                 title="RichText"
                 source="import {'{ RichText }'} from 'pigui'"
-                description="Renders untrusted HTML through DOMPurify, styled by the token palette instead of a typography plugin."
+                description="Renders Markdown, sanitized through DOMPurify and styled by the token palette instead of a typography plugin."
             >
                 <Demo inner="block w-full" code={richTextCode}>
                     <RichTextDemo />
@@ -619,7 +619,7 @@
                 id="rich-editor"
                 title="RichEditor"
                 source="import {'{ RichEditor }'} from 'pigui/editor'"
-                description="A Tiptap editor with a PigUI toolbar. Shipped from the pigui/editor subpath, so Tiptap stays optional for everyone else."
+                description="A Tiptap editor that reads and writes Markdown. Shipped from the pigui/editor subpath, so Tiptap stays optional for everyone else."
             >
                 <Demo
                     label="Default"

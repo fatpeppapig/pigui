@@ -120,6 +120,6 @@ export const editorTools: Record<EditorTool, ToolDefinition> = {
 
 export const DEFAULT_TOOLS: EditorTool[][] = [
     ["h1", "h2", "h3"],
-    ["bold", "italic", "underline"],
+    ["bold", "italic", "strike"],
     ["bulletList", "orderedList"],
 ];

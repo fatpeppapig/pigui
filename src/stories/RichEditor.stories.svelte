@@ -11,7 +11,7 @@
             size: { control: "select", options: SIZES },
         },
         args: {
-            value: "<h3>Notes</h3><p>Write something here.</p>",
+            value: "## Notes\n\nWrite something here.",
         },
     });
 </script>

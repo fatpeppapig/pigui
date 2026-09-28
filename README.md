@@ -80,25 +80,28 @@ DatePicker, DateSelector, Dialog, Dropdown, Floating, Input, Loader, Modal,
 Navbar, Pagination, Popover, Progress, RichText, SearchSelect, Select, Tabbar,
 Table, TimePicker, TimeSelector, ToastContainer (+ `showToast`), Tooltip.
 
-## Rich text
+## Markdown
 
-`RichText` renders stored HTML through DOMPurify into `.pigui-prose`, styled
-from the same tokens as everything else — no `@tailwindcss/typography`, and no
-`dark:` variants to wire up:
+Markdown is the storage format for both components. `RichText` renders it with
+[marked](https://marked.js.org), sanitizes the result with DOMPurify — Markdown
+may embed raw HTML — and styles it as `.pigui-prose` from the same tokens as
+everything else, so there is no `@tailwindcss/typography` and no `dark:`
+variants to wire up:
 
 ```svelte
 <RichText value={dish.recipe} />
 ```
 
 Without a DOM (SSR, prerendering) DOMPurify cannot run, so the component
-renders the tag-stripped text and swaps in the real markup once it hydrates.
+renders the Markdown source as plain text and swaps in the rendered output once
+it hydrates.
 
-The matching editor is a [Tiptap](https://tiptap.dev) wrapper with a PigUI
-toolbar. It lives behind its own entry point so Tiptap stays out of the main
-bundle — and out of `npm install` — for anyone who does not use it:
+The matching editor wraps [Tiptap](https://tiptap.dev). It lives behind its own
+entry point so Tiptap stays out of the main bundle — and out of `npm install` —
+for anyone who does not use it:
 
 ```sh
-npm install @tiptap/core @tiptap/pm @tiptap/starter-kit
+npm install @tiptap/core @tiptap/pm @tiptap/starter-kit @tiptap/markdown
 ```
 
 ```svelte
@@ -111,9 +114,9 @@ npm install @tiptap/core @tiptap/pm @tiptap/starter-kit
 <RichEditor bind:value={recipe} onCommit={save} class="min-h-60" />
 ```
 
-`value` tracks every keystroke; `onCommit` fires on blur and on unmount, and
-only when the content actually changed. `tools` reshapes the toolbar — an
-array of groups, each rendered as a `ButtonGroup`:
+`value` tracks every keystroke as Markdown; `onCommit` fires on blur and on
+unmount, and only when the content actually changed. `tools` reshapes the
+toolbar — an array of groups, each rendered as a `ButtonGroup`:
 
 ```svelte
 <RichEditor
@@ -127,6 +130,13 @@ array of groups, each rendered as a `ButtonGroup`:
 Available tools: `h1`, `h2`, `h3`, `bold`, `italic`, `underline`, `strike`,
 `code`, `bulletList`, `orderedList`, `blockquote`, `horizontalRule`, `undo`,
 `redo`. Pass `extensions` to add Tiptap extensions beyond `StarterKit`.
+
+Two things to know about the round trip. Anything outside the editor's schema
+is dropped when content loads, and the editor rewrites `value` into its own
+canonical Markdown on load — a reformat, not an edit, so it does not trigger
+`onCommit`. And `underline` is not Markdown: Tiptap serializes it as
+`++text++`, which `RichText` prints literally, so it is not in the default
+toolbar.
 
 ## Development
 

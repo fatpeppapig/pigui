@@ -7,7 +7,7 @@
         title: "Components/RichText",
         component: RichText,
         args: {
-            value: "<h2>Heading</h2><p>Body copy with <strong>bold</strong> and <em>italic</em>.</p><ul><li>First</li><li>Second</li></ul>",
+            value: "## Heading\n\nBody copy with **bold** and *italic*.\n\n- First\n- Second",
         },
     });
 </script>
@@ -23,7 +23,7 @@
 <Story
     name="Sanitized"
     args={{
-        value: `<p>Safe paragraph.</p><script>alert(1)<\/script><img src="x" onerror="alert(1)">`,
+        value: `Safe paragraph.\n\n<script>alert(1)<\/script>\n\n<img src="x" onerror="alert(1)">`,
     }}
 >
     {#snippet template(args)}
@@ -36,7 +36,7 @@
 <Story
     name="Blocks"
     args={{
-        value: "<blockquote>A quotation.</blockquote><pre><code>npm install pigui</code></pre><hr><ol><li>One</li><li>Two</li></ol>",
+        value: "> A quotation.\n\n```\nnpm install pigui\n```\n\n---\n\n1. One\n2. Two",
     }}
 >
     {#snippet template(args)}

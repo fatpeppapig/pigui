@@ -2,6 +2,7 @@
     import { onDestroy, onMount } from "svelte";
 
     import { Editor, type Extensions } from "@tiptap/core";
+    import { Markdown } from "@tiptap/markdown";
     import StarterKit from "@tiptap/starter-kit";
 
     import "../../styles/RichText.css";
@@ -9,7 +10,7 @@
     import Button from "../Button.svelte";
     import ButtonGroup from "../ButtonGroup.svelte";
     import type { Size } from "../constants/variants";
-    import { normalizeHtml, sanitizeHtml } from "../utils/html";
+    import { normalizeMarkdown } from "../utils/markdown";
 
     import { DEFAULT_TOOLS, editorTools, type EditorTool } from "./tools";
 
@@ -38,6 +39,9 @@
     let revision = $state(0);
     let committed = value;
 
+    const read = (instance: Editor) =>
+        normalizeMarkdown(instance.getMarkdown());
+
     const commit = () => {
         if (value === committed) return;
 
@@ -49,20 +53,23 @@
         editor = new Editor({
             element,
             editable,
-            extensions: [StarterKit, ...extensions],
-            content: sanitizeHtml(value),
+            extensions: [StarterKit, Markdown, ...extensions],
+            content: value,
+            contentType: "markdown",
             editorProps: {
                 attributes: { class: "pigui-prose h-full px-3 py-2" },
             },
             onTransaction: ({ editor: instance }) => {
                 revision++;
 
-                const html = normalizeHtml(instance.getHTML());
+                const markdown = read(instance);
 
-                if (html !== value) value = html;
+                if (markdown !== value) value = markdown;
             },
             onBlur: commit,
         });
+
+        committed = read(editor);
     });
 
     onDestroy(() => {
@@ -71,9 +78,12 @@
     });
 
     $effect(() => {
-        if (!editor || normalizeHtml(editor.getHTML()) === value) return;
+        if (!editor || read(editor) === value) return;
 
-        editor.commands.setContent(sanitizeHtml(value), { emitUpdate: false });
+        editor.commands.setContent(value, {
+            contentType: "markdown",
+            emitUpdate: false,
+        });
     });
 
     $effect(() => {

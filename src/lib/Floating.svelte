@@ -1,7 +1,11 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
 
-    import { computePosition, type Placement, type Side } from "./utils/floating";
+    import {
+        computePosition,
+        type Placement,
+        type Side,
+    } from "./utils/floating";
 
     import "../styles/Floating.css";
 

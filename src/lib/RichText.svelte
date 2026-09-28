@@ -1,7 +1,7 @@
 <script lang="ts">
     import "../styles/RichText.css";
 
-    import { htmlToText, sanitizeHtml } from "./utils/html";
+    import { markdownToHtml } from "./utils/markdown";
 
     type Props = {
         value?: string;
@@ -10,17 +10,17 @@
 
     let { value = "", class: className }: Props = $props();
 
-    let sanitized: string | null = $state(null);
+    let html: string | null = $state(null);
 
     $effect(() => {
-        sanitized = sanitizeHtml(value);
+        html = markdownToHtml(value);
     });
 </script>
 
 <div class={["pigui-prose", className]}>
-    {#if sanitized === null}
-        {htmlToText(value)}
+    {#if html === null}
+        {value}
     {:else}
-        {@html sanitized}
+        {@html html}
     {/if}
 </div>
